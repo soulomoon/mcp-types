@@ -1,2 +1,2 @@
 Todo:
-Flatten genModel
+[] Generate ToJSON and fromJSON for all Types
