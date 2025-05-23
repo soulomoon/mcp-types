@@ -11,6 +11,6 @@ import Network.Protocol.MCP.Types.PromptMessage
 
 data Meta_ = Meta_ {}
 data GetPromptResult
-    = GetPromptResult {description :: Text,
-                       messages :: [PromptMessage],
-                       meta_ :: Meta_}
+    = GetPromptResult {meta_ :: Meta_,
+                       description :: Text,
+                       messages :: [PromptMessage]}

@@ -14,8 +14,8 @@ import Network.Protocol.MCP.Types.EmbeddedResource
 
 data Meta_ = Meta_ {}
 data CallToolResult
-    = CallToolResult {content :: [Either TextContent
+    = CallToolResult {meta_ :: Meta_,
+                      content :: [Either TextContent
                                          (Either ImageContent
                                                  (Either AudioContent EmbeddedResource))],
-                      isError :: Bool,
-                      meta_ :: Meta_}
+                      isError :: Bool}

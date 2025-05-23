@@ -12,4 +12,4 @@ data Meta_ = Meta_ {}
 data Completion
     = Completion {hasMore :: Bool, total :: Int, values :: [Text]}
 data CompleteResult
-    = CompleteResult {completion :: Completion, meta_ :: Meta_}
+    = CompleteResult {meta_ :: Meta_, completion :: Completion}

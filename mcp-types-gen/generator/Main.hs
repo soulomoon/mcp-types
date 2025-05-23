@@ -1,5 +1,6 @@
 {-# LANGUAGE MultilineStrings #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE OverloadedRecordDot #-}
 {-# LANGUAGE TemplateHaskell #-}
 
 module Main where
@@ -12,8 +13,9 @@ import GenTH (genDataTypesTH)
 import Language.Haskell.TH (pprint, runQ)
 import System.Directory (createDirectoryIfMissing)
 import System.FilePath ((<.>), (</>))
-import Types (SEntity)
+import Types (SEntity, NameEntity)
 import Utils (getAllRefs, refToImport)
+import GenName (GenName(..))
 
 modulePath :: FilePath
 modulePath = "meta/schema.json"
@@ -33,9 +35,9 @@ nameSpaceToPath = map (\c -> if c == '.' then '/' else c)
 baseDir :: FilePath -> FilePath
 baseDir = reverse . dropWhile (/= '/') . reverse
 
-genOne :: (Text, SEntity) -> IO ()
+genOne :: NameEntity -> IO ()
 genOne (name, s) = do
-  let nameSpaceName = mcpNameSpace <.> T.unpack name
+  let nameSpaceName = mcpNameSpace <.> T.unpack name.genTypeName
   let filePath = generatedDir </> (nameSpaceToPath nameSpaceName ++ ".hs")
   putStrLn $ "Generating file: " ++ filePath
   putStrLn $ "Generating file: " ++ show s
@@ -108,7 +110,7 @@ main = do
   print $ "Structures: " ++ show structures
   mapM_ genOne structures
   putStrLn "\n-- Finished generating Haskell data types --\n"
-  let modules = map ((mcpNameSpace <.>) . T.unpack . fst) structures
+  let modules = map ((mcpNameSpace <.>) . T.unpack . genTypeName . fst) structures
   let cabalFileContent = genCabalFile $ intercalate "\n," modules
   putStrLn $ "Generated modules: \n" ++ cabalFileContent
   let cabalFilePath = generatedDir </> "mcp-types.cabal"

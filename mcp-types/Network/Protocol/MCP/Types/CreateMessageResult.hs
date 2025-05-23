@@ -14,9 +14,8 @@ import Network.Protocol.MCP.Types.Role
 
 data Meta_ = Meta_ {}
 data CreateMessageResult
-    = CreateMessageResult {content :: (Either TextContent
-                                              (Either ImageContent AudioContent)),
-                           meta_ :: Meta_,
+    = CreateMessageResult {meta_ :: Meta_,
+                           content :: (Either TextContent (Either ImageContent AudioContent)),
                            model :: Text,
                            role :: Role,
                            stopReason :: Text}

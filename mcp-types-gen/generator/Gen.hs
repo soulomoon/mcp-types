@@ -11,8 +11,8 @@ import Data.Aeson.KeyMap qualified as KM
 import Data.Aeson.Types (Parser, parseEither)
 import Data.ByteString.Lazy qualified as B
 import Data.Either (lefts, rights)
-import Data.Text (Text)
 import Types
+import GenName (fromOrigName)
 
 genMetaModel :: FilePath -> IO MetaModel
 genMetaModel schemaPath = do
@@ -23,13 +23,13 @@ genMetaModel schemaPath = do
   let jsonTypes = filter (isJsonType . snd) sts
   putStrLn $ "number of json types " ++ show (length jsonTypes)
   mapM_ (putStrLn . ("JSON Type: " ++) . show) jsonTypes
-  let inspectKey = "RequestId"
-  let inspectValue = filter ((== inspectKey) . fst) sts
-  putStrLn $ "inspectValue: " ++ show inspectValue
+  -- let inspectKey = "RequestId"
+  -- let inspectValue = filter ((== inspectKey) . fst) sts
+  -- putStrLn $ "inspectValue: " ++ show inspectValue
   return md
 
--- | Extracts structures [(Text, SEntity)] from a schema file
-getStructuresFromSchema :: FilePath -> IO [(Text, SEntity)]
+-- | Extracts structures [(NameEntity)] from a schema file
+getStructuresFromSchema :: FilePath -> IO [NameEntity]
 getStructuresFromSchema schemaPath = do
   fileContent <- B.readFile schemaPath
   case eitherDecode fileContent of
@@ -50,7 +50,7 @@ getStructuresFromSchema schemaPath = do
         _ -> fail "'definitions' is not an object."
     Right _ -> fail "Top-level JSON is not an object."
 
-buildEntity :: (K.Key, KM.KeyMap Value) -> Parser (Text, SEntity)
+buildEntity :: (K.Key, KM.KeyMap Value) -> Parser NameEntity
 buildEntity (k, defObj) = do
   s <- parseJSON (Object defObj)
-  return (K.toText k, s)
+  return (fromOrigName $ K.toText k, s)

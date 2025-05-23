@@ -12,6 +12,5 @@ import Network.Protocol.MCP.Types.BlobResourceContents
 
 data Meta_ = Meta_ {}
 data ReadResourceResult
-    = ReadResourceResult {contents :: [Either TextResourceContents
-                                              BlobResourceContents],
-                          meta_ :: Meta_}
+    = ReadResourceResult {meta_ :: Meta_,
+                          contents :: [Either TextResourceContents BlobResourceContents]}

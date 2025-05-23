@@ -14,8 +14,11 @@ import Data.Data (Data)
 import Data.Map qualified as M
 import Data.Maybe (mapMaybe)
 import Data.Text qualified as T
+import GenName (GenName)
 
 -- Reference type
+
+type NameEntity = (GenName, SEntity)
 
 data Ref = Ref
   { refValue :: T.Text,
@@ -120,7 +123,7 @@ instance FromJSON SArray where
 -- Object type
 
 data SObject = SObject
-  { sProperties :: M.Map T.Text SEntity,
+  { sProperties :: M.Map GenName SEntity,
     sDescription :: Maybe T.Text,
     sRequired :: Maybe [T.Text]
   }
@@ -184,7 +187,7 @@ isJsonType _ = False
 
 -- MetaModel type
 newtype MetaModel = MetaModel
-  {structures :: [(T.Text, SEntity)]}
+  {structures :: [NameEntity]}
   deriving (Eq, Ord, Data)
 
 instance Show MetaModel where

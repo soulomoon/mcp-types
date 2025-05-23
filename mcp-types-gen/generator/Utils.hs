@@ -10,6 +10,7 @@ import Data.Text (Text)
 import Data.Maybe (fromMaybe)
 import qualified Data.Char as Char
 import System.FilePath ((<.>))
+import GenName (fromOrigName, GenName (..))
 
 -- | Function to extract all references from a given SEntity
 --   using a generic traversal.
@@ -37,6 +38,12 @@ capitalize [] = []
 capitalize (x:xs) = Char.toUpper x : xs
 
 
-mkItemName name = name <> "Item"
-mkItemNameI i = "Item" <> T.pack (show i)
+mkItemNameI :: Show a => a -> GenName
+mkItemNameI i = fromOrigName $ "Item" <> T.pack (show i)
 
+
+renameField :: Text -> Text
+renameField "_meta" = "meta_"
+renameField "data" = "data_"
+renameField "type" = "type_"
+renameField fieldName = fieldName

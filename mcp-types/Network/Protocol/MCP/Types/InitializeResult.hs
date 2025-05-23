@@ -12,8 +12,8 @@ import Network.Protocol.MCP.Types.Implementation
 
 data Meta_ = Meta_ {}
 data InitializeResult
-    = InitializeResult {capabilities :: ServerCapabilities,
+    = InitializeResult {meta_ :: Meta_,
+                        capabilities :: ServerCapabilities,
                         instructions :: Text,
-                        meta_ :: Meta_,
                         protocolVersion :: Text,
                         serverInfo :: Implementation}
