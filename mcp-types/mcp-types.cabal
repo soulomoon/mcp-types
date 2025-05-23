@@ -1,0 +1,110 @@
+cabal-version:      3.12
+name:               mcp-types
+version:            0.1.0.0
+synopsis:           "MCP types"
+license:            BSD-3-Clause
+license-file:       LICENSE
+author:             Patrick
+maintainer:         patrickwalesss@gmail.com
+build-type:         Simple
+extra-doc-files:    CHANGELOG.md
+
+common warnings
+    ghc-options: -Wall
+
+library mcp-generated-types
+    hs-source-dirs:   ./
+    exposed-modules:
+        Network.Protocol.MCP.Types.Annotations
+        ,Network.Protocol.MCP.Types.AudioContent
+        ,Network.Protocol.MCP.Types.BlobResourceContents
+        ,Network.Protocol.MCP.Types.CallToolRequest
+        ,Network.Protocol.MCP.Types.CallToolResult
+        ,Network.Protocol.MCP.Types.CancelledNotification
+        ,Network.Protocol.MCP.Types.ClientCapabilities
+        ,Network.Protocol.MCP.Types.ClientNotification
+        ,Network.Protocol.MCP.Types.ClientRequest
+        ,Network.Protocol.MCP.Types.ClientResult
+        ,Network.Protocol.MCP.Types.CompleteRequest
+        ,Network.Protocol.MCP.Types.CompleteResult
+        ,Network.Protocol.MCP.Types.CreateMessageRequest
+        ,Network.Protocol.MCP.Types.CreateMessageResult
+        ,Network.Protocol.MCP.Types.Cursor
+        ,Network.Protocol.MCP.Types.EmbeddedResource
+        ,Network.Protocol.MCP.Types.EmptyResult
+        ,Network.Protocol.MCP.Types.GetPromptRequest
+        ,Network.Protocol.MCP.Types.GetPromptResult
+        ,Network.Protocol.MCP.Types.ImageContent
+        ,Network.Protocol.MCP.Types.Implementation
+        ,Network.Protocol.MCP.Types.InitializeRequest
+        ,Network.Protocol.MCP.Types.InitializeResult
+        ,Network.Protocol.MCP.Types.InitializedNotification
+        ,Network.Protocol.MCP.Types.JSONRPCBatchRequest
+        ,Network.Protocol.MCP.Types.JSONRPCBatchResponse
+        ,Network.Protocol.MCP.Types.JSONRPCError
+        ,Network.Protocol.MCP.Types.JSONRPCMessage
+        ,Network.Protocol.MCP.Types.JSONRPCNotification
+        ,Network.Protocol.MCP.Types.JSONRPCRequest
+        ,Network.Protocol.MCP.Types.JSONRPCResponse
+        ,Network.Protocol.MCP.Types.ListPromptsRequest
+        ,Network.Protocol.MCP.Types.ListPromptsResult
+        ,Network.Protocol.MCP.Types.ListResourceTemplatesRequest
+        ,Network.Protocol.MCP.Types.ListResourceTemplatesResult
+        ,Network.Protocol.MCP.Types.ListResourcesRequest
+        ,Network.Protocol.MCP.Types.ListResourcesResult
+        ,Network.Protocol.MCP.Types.ListRootsRequest
+        ,Network.Protocol.MCP.Types.ListRootsResult
+        ,Network.Protocol.MCP.Types.ListToolsRequest
+        ,Network.Protocol.MCP.Types.ListToolsResult
+        ,Network.Protocol.MCP.Types.LoggingLevel
+        ,Network.Protocol.MCP.Types.LoggingMessageNotification
+        ,Network.Protocol.MCP.Types.ModelHint
+        ,Network.Protocol.MCP.Types.ModelPreferences
+        ,Network.Protocol.MCP.Types.Notification
+        ,Network.Protocol.MCP.Types.PaginatedRequest
+        ,Network.Protocol.MCP.Types.PaginatedResult
+        ,Network.Protocol.MCP.Types.PingRequest
+        ,Network.Protocol.MCP.Types.ProgressNotification
+        ,Network.Protocol.MCP.Types.ProgressToken
+        ,Network.Protocol.MCP.Types.Prompt
+        ,Network.Protocol.MCP.Types.PromptArgument
+        ,Network.Protocol.MCP.Types.PromptListChangedNotification
+        ,Network.Protocol.MCP.Types.PromptMessage
+        ,Network.Protocol.MCP.Types.PromptReference
+        ,Network.Protocol.MCP.Types.ReadResourceRequest
+        ,Network.Protocol.MCP.Types.ReadResourceResult
+        ,Network.Protocol.MCP.Types.Request
+        ,Network.Protocol.MCP.Types.RequestId
+        ,Network.Protocol.MCP.Types.Resource
+        ,Network.Protocol.MCP.Types.ResourceContents
+        ,Network.Protocol.MCP.Types.ResourceListChangedNotification
+        ,Network.Protocol.MCP.Types.ResourceReference
+        ,Network.Protocol.MCP.Types.ResourceTemplate
+        ,Network.Protocol.MCP.Types.ResourceUpdatedNotification
+        ,Network.Protocol.MCP.Types.Result
+        ,Network.Protocol.MCP.Types.Role
+        ,Network.Protocol.MCP.Types.Root
+        ,Network.Protocol.MCP.Types.RootsListChangedNotification
+        ,Network.Protocol.MCP.Types.SamplingMessage
+        ,Network.Protocol.MCP.Types.ServerCapabilities
+        ,Network.Protocol.MCP.Types.ServerNotification
+        ,Network.Protocol.MCP.Types.ServerRequest
+        ,Network.Protocol.MCP.Types.ServerResult
+        ,Network.Protocol.MCP.Types.SetLevelRequest
+        ,Network.Protocol.MCP.Types.SubscribeRequest
+        ,Network.Protocol.MCP.Types.TextContent
+        ,Network.Protocol.MCP.Types.TextResourceContents
+        ,Network.Protocol.MCP.Types.Tool
+        ,Network.Protocol.MCP.Types.ToolAnnotations
+        ,Network.Protocol.MCP.Types.ToolListChangedNotification
+        ,Network.Protocol.MCP.Types.UnsubscribeRequest
+    
+    
+    build-depends:
+                      base >=4.7 && <5
+                      ,ghc-prim
+                      ,aeson
+                      ,text
+    
+    default-language: GHC2024
+    other-extensions: DuplicateRecordFields

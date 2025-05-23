@@ -1,0 +1,47 @@
+cabal-version:      3.12
+name:               mcp-types-gen
+version:            0.1.0.0
+synopsis:           "MCP types code generator"
+license:            BSD-3-Clause
+license-file:       LICENSE
+author:             Patrick
+maintainer:         patrickwalesss@gmail.com
+build-type:         Simple
+extra-doc-files:    CHANGELOG.md
+
+common warnings
+    ghc-options: -Wall
+
+executable mcp-types-gen
+    import:           warnings
+    main-is:          Main.hs
+    other-modules:
+                      Gen
+                      GenTH
+                      Types
+                      Utils
+    build-depends:
+        base >=4.7 && <5
+        , aeson
+        , bytestring
+        , template-haskell
+        , text
+        , directory
+        , filepath
+        , time
+        , text
+        , fast-logger
+        , unordered-containers
+        , stm
+        , aeson
+        , async
+        , tasty
+        , mtl
+        , scientific
+        , containers
+        , bytestring
+        , bytestring
+        , text
+        , syb
+    hs-source-dirs:   generator
+    default-language: GHC2024

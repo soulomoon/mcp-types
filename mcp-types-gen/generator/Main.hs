@@ -1,0 +1,116 @@
+{-# LANGUAGE MultilineStrings #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell #-}
+
+module Main where
+
+import Data.List (intercalate)
+import Data.Text (Text)
+import Data.Text qualified as T
+import Gen (genMetaModel, getStructuresFromSchema)
+import GenTH (genDataTypesTH)
+import Language.Haskell.TH (pprint, runQ)
+import System.Directory (createDirectoryIfMissing)
+import System.FilePath ((<.>), (</>))
+import Types (SEntity)
+import Utils (getAllRefs, refToImport)
+
+modulePath :: FilePath
+modulePath = "meta/schema.json"
+
+generatedDir :: FilePath
+-- generatedDir = "generated"
+generatedDir = "mcp-types"
+
+mcpNameSpace :: String
+mcpNameSpace = "Network.Protocol.MCP.Types"
+
+-- | Converts a Haskell module namespace (e.g. "Data.Text") to a file path (e.g. "Data/Text").
+nameSpaceToPath :: String -> FilePath
+nameSpaceToPath = map (\c -> if c == '.' then '/' else c)
+
+-- | Get the base directory of a file path (i.e., drop the file name).
+baseDir :: FilePath -> FilePath
+baseDir = reverse . dropWhile (/= '/') . reverse
+
+genOne :: (Text, SEntity) -> IO ()
+genOne (name, s) = do
+  let nameSpaceName = mcpNameSpace <.> T.unpack name
+  let filePath = generatedDir </> (nameSpaceToPath nameSpaceName ++ ".hs")
+  putStrLn $ "Generating file: " ++ filePath
+  putStrLn $ "Generating file: " ++ show s
+  decs <- runQ (genDataTypesTH [(name, s)])
+  putStrLn $ "Generated declarations: " ++ show decs
+  let allRefs = getAllRefs s
+      refImports = map (refToImport mcpNameSpace) allRefs
+      code =
+        unlines
+          [ "{-# LANGUAGE DeriveGeneric #-}",
+            "{-# LANGUAGE DuplicateRecordFields #-}",
+            "",
+            "module " ++ nameSpaceName ++ " where",
+            "",
+            "import Prelude",
+            "import Data.Aeson (Value)",
+            "import Data.Text (Text)",
+            "",
+            unlines refImports,
+            pprint decs
+          ]
+  createDirectoryIfMissing True (baseDir filePath)
+  writeFile filePath code
+  putStrLn $ "Generated types written to: " ++ filePath
+
+-- genCabalFile :: [Char]
+genCabalFile :: String -> String
+genCabalFile modules =
+  """
+  cabal-version:      3.12
+  name:               mcp-types
+  version:            0.1.0.0
+  synopsis:           "MCP types"
+  license:            BSD-3-Clause
+  license-file:       LICENSE
+  author:             Patrick
+  maintainer:         patrickwalesss@gmail.com
+  build-type:         Simple
+  extra-doc-files:    CHANGELOG.md
+
+  common warnings
+      ghc-options: -Wall
+
+  library mcp-generated-types
+      hs-source-dirs:   ./
+      exposed-modules:\n
+  """
+    ++ hang 8 modules
+    ++ hang 4 """
+       \n
+       build-depends:
+                         base >=4.7 && <5
+                         ,ghc-prim
+                         ,aeson
+                         ,text
+
+       default-language: GHC2024
+       other-extensions: DuplicateRecordFields
+       """
+
+hang :: Int -> String -> String
+hang n str = unlines $ map (replicate n ' ' ++) (lines str)
+
+main :: IO ()
+main = do
+  putStrLn "\n-- parsing schema --\n"
+  _metaModel <- genMetaModel modulePath
+  putStrLn "\n-- Generating Haskell data types to generated/Types.hs --\n"
+  structures <- getStructuresFromSchema modulePath
+  print $ "Structures: " ++ show structures
+  mapM_ genOne structures
+  putStrLn "\n-- Finished generating Haskell data types --\n"
+  let modules = map ((mcpNameSpace <.>) . T.unpack . fst) structures
+  let cabalFileContent = genCabalFile $ intercalate "\n," modules
+  putStrLn $ "Generated modules: \n" ++ cabalFileContent
+  let cabalFilePath = generatedDir </> "mcp-types.cabal"
+  writeFile cabalFilePath cabalFileContent
+  putStrLn "All generated files are in the generated directory."
