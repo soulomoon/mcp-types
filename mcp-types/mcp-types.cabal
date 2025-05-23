@@ -107,4 +107,5 @@ library mcp-generated-types
                       ,text
     
     default-language: GHC2024
+    other-modules:  Utils
     other-extensions: DuplicateRecordFields

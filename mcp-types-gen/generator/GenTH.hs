@@ -8,7 +8,7 @@ module GenTH (genDataTypesTH, genDataTypeTH, hsTypeTH) where
 import Control.Monad.RWS (MonadWriter)
 import Control.Monad.Writer (MonadWriter (..))
 import Control.Monad.Writer.Strict (runWriter)
-import Data.Aeson (Value)
+import Data.Aeson (Value, defaultOptions, Options (..), genericToJSON, genericParseJSON)
 import Data.Map qualified as M
 import Data.Text (Text)
 import Data.Text qualified as T
@@ -17,15 +17,24 @@ import Language.Haskell.TH
 import Types
 import Utils
 import GenName
+import Data.Generics (Generic)
 
 -- | Generate Haskell data type declarations from schema definitions using Template Haskell
 genDataTypesTH :: [NameEntity] -> Q [Dec]
 genDataTypesTH defs = do
   let obs = concatMap flattenObject defs
   traceM $ "Flattened objects: \n" ++ unlines (show <$> obs)
-  a <- concat <$> mapM genDataTypeTH obs
-  traceM $ show a
-  return a
+  decs <- concat <$> mapM genDataTypeTH obs
+  jsons <- concat <$> mapM deriveJsonTH obs
+  traceM $ show (decs ++ jsons)
+  return (decs ++ jsons)
+
+-- Helper to generate ToJSON/FromJSON instances for each type
+deriveJsonTH :: NameEntity -> Q [Dec]
+deriveJsonTH (name, obj) =
+  case obj of
+    SObjectType _ -> pure []
+    _ -> pure []
 
 goExpandObj :: (MonadWriter [(NameEntity)] m) => NameEntity -> m ()
 goExpandObj item@(_, obj) = do
@@ -37,10 +46,10 @@ goExpandObj item@(_, obj) = do
 expandObj :: (MonadWriter [(NameEntity)] m) => NameEntity -> m SEntity
 expandObj (name, obj) = do
   case obj of
-    SObjectType obj@(SObject props _ _) -> do
+    SObjectType sobj@(SObject props _ _) -> do
       let fields = M.toList props
       newFields <- mapM expandObj fields
-      let newNamedObj = (name, SObjectType obj {sProperties = M.fromList (zip (fst <$> fields) newFields)})
+      let newNamedObj = (name, SObjectType sobj {sProperties = M.fromList (zip (fst <$> fields) newFields)})
       tellAndReturn newNamedObj
     SArrayType (Array_ o d) -> do
       let itemName = toItemName name
@@ -60,24 +69,32 @@ flattenObject x =
    in snd ans
 
 genDataTypeTH :: NameEntity -> Q [Dec]
-genDataTypeTH (name, obj) = case obj of
-  SArrayType (Array_ (SOneOf _) _); SRef _ ->
-    return [TySynD typeName [] $ hsTypeTH obj]
-  SStringType str ->
-    case str.enumValues of
-      Just enums | not (null enums) -> do
-        cons <- mapM (mkCon []) enums
-        return [DataD [] typeName [] Nothing cons []]
-      _ -> do
-        return [TySynD typeName [] (hsTypeTH obj)]
-  STypeAlternativeTypeAlternative ob -> do
-    cons <- typeListFields name $ sTypes ob
-    return [DataD [] typeName [] Nothing cons []]
-  SOneOf _ -> return [TySynD typeName [] (hsTypeTH obj)]
-  SObjectType ob -> do
-    let fields = mkFields $ propertiesField ob
-    sequence [recC typeName fields >>= \con -> return $ DataD [] typeName [] Nothing [con] []]
-  _ -> error $ "Unsupported type: " ++ show name ++ " " ++ show obj
+genDataTypeTH (name, obj) = do
+  toJSONFun <- [| genericToJSON defaultOptions{ fieldLabelModifier = toJSONField } |]
+  fromJSONFun <- [| genericParseJSON defaultOptions{ fieldLabelModifier = fromJSONField } |]
+  let derivings = map (\x -> DerivClause Nothing [conT' x]) [''Show, ''Eq, ''Ord, ''Generic]
+  let toJSON = InstanceD Nothing [] (AppT (ConT $ mkName "ToJSON") (ConT typeName))  [FunD (mkName "toJSON") [Clause [] (NormalB toJSONFun) []]]
+  let fromJSON = InstanceD Nothing [] (AppT (ConT $ mkName "FromJSON") (ConT typeName)) [FunD (mkName "parseJSON") [Clause [] (NormalB fromJSONFun) []]]
+  case obj of
+    SArrayType (Array_ (SOneOf _) _); SRef _ ->
+      return [TySynD typeName [] $ hsTypeTH obj]
+    SStringType str -> do
+      case str.enumValues of
+        Just enums | not (null enums) -> do
+          cons <- mapM (mkCon []) enums
+          return [DataD [] typeName [] Nothing cons derivings, toJSON, fromJSON]
+        _ -> do
+          return [TySynD typeName [] (hsTypeTH obj)]
+    STypeAlternativeTypeAlternative ob -> do
+      cons <- typeListFields name $ sTypes ob
+      return [DataD [] typeName [] Nothing cons derivings, toJSON, fromJSON]
+    SOneOf _ -> return [TySynD typeName [] (hsTypeTH obj)]
+    SObjectType ob -> do
+      let fields = mkFields $ propertiesField ob
+      -- InstanceD (Maybe Overlap) Cxt Type [Dec]
+      decl <- recC typeName fields >>= \con -> return $ DataD [] typeName [] Nothing [con] derivings
+      return [decl, toJSON, fromJSON]
+    _ -> error $ "Unsupported type: " ++ show name ++ " " ++ show obj
   where
     typeName = mkName $ T.unpack name.genTypeName
     mkFields nameTypes =

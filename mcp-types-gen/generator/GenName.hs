@@ -39,10 +39,17 @@ fromOrigName origName =
     upperCaseName = T.toUpper (T.take 1 genHsName) <> T.tail genHsName
 
 renameField :: Text -> Text
-renameField "_meta" = "meta_"
-renameField "data" = "data_"
-renameField "type" = "type_"
-renameField fieldName = fieldName
+renameField t = case t of
+  "_meta" -> "meta_"
+  "data" -> "data_"
+  "type" -> "type_"
+  _ -> t
+-- renameField "_meta" = "meta_"
+-- renameField "data" = "data_"
+-- renameField "type" = "type_"
+-- renameField fieldName = fieldName
+
+
 
 instance FromJSON GenName where
   parseJSON = withText "GenName" $ \origName-> do

@@ -6,16 +6,16 @@
 module Main where
 
 import Data.List (intercalate)
-import Data.Text (Text)
 import Data.Text qualified as T
 import Gen (genMetaModel, getStructuresFromSchema)
 import GenTH (genDataTypesTH)
 import Language.Haskell.TH (pprint, runQ)
 import System.Directory (createDirectoryIfMissing)
 import System.FilePath ((<.>), (</>))
-import Types (SEntity, NameEntity)
+import Types (NameEntity)
 import Utils (getAllRefs, refToImport)
 import GenName (GenName(..))
+import Data.Aeson (Value, defaultOptions, Options (..), genericToJSON, genericParseJSON)
 
 modulePath :: FilePath
 modulePath = "meta/schema.json"
@@ -52,9 +52,16 @@ genOne (name, s) = do
             "",
             "module " ++ nameSpaceName ++ " where",
             "",
-            "import Prelude",
-            "import Data.Aeson (Value)",
-            "import Data.Text (Text)",
+            """
+            import Prelude
+            import Data.Aeson (Value, FromJSON, ToJSON, defaultOptions, Options (..), genericToJSON, genericParseJSON, toJSON, parseJSON)
+            import Data.Text (Text)
+            import GHC.Generics (Generic)
+            import qualified Data.Aeson as Data.Aeson.Types.Internal
+            import qualified Data.Aeson as Data.Aeson.Types.FromJSON
+            import qualified Data.Aeson as Data.Aeson.Types.ToJSON
+            import qualified Utils
+            """,
             "",
             unlines refImports,
             pprint decs
@@ -95,6 +102,7 @@ genCabalFile modules =
                          ,text
 
        default-language: GHC2024
+       other-modules:  Utils
        other-extensions: DuplicateRecordFields
        """
 
