@@ -1,2 +1,3 @@
 Todo:
-[] Generate ToJSON and fromJSON for all Types
+[x] Generate ToJSON and fromJSON for all Types
+[ ] add unit tests
