@@ -24,8 +24,12 @@ getAllRefs = everything (++) ([] `mkQ` fromEntity)
 refToImport :: String -> Ref -> String
 refToImport nameSpace (Ref refValue _) =
   case T.stripPrefix "#/definitions/" refValue of
-    Just refName -> "import " ++ nameSpace <.> T.unpack refName
-    Nothing -> "import " ++ nameSpace <.> T.unpack refValue
+    Just refName -> nameToImport nameSpace $ T.unpack refName
+    Nothing -> nameToImport nameSpace $ T.unpack refValue
+
+nameToImport :: String -> String -> String
+nameToImport nameSpace name =
+  "import " ++ nameSpace <.> name ++ "(" ++ name ++ ")"
 
 removeInternal :: Name -> Name
 removeInternal name = mkName (nameBase name)
@@ -55,12 +59,4 @@ toJSONField fieldName =
     "meta_" -> "_meta"
     "data_" -> "_data"
     "type_" -> "_type"
-    _ -> fieldName
-
-fromJSONField :: String -> String
-fromJSONField fieldName =
-  case fieldName of
-    "_meta" -> "meta_"
-    "_data" -> "data_"
-    "_type" -> "type_"
     _ -> fieldName

@@ -3,7 +3,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell #-}
 
-module GenTH (genDataTypesTH, genDataTypeTH, hsTypeTH) where
+module GenTH (genDataTypesTH, genDataTypeTH, hsTypeTH, genAllProps) where
 
 import Control.Monad.RWS (MonadWriter)
 import Control.Monad.Writer (MonadWriter (..))
@@ -71,8 +71,13 @@ flattenObject x =
 genDataTypeTH :: NameEntity -> Q [Dec]
 genDataTypeTH (name, obj) = do
   toJSONFun <- [| genericToJSON defaultOptions{ fieldLabelModifier = toJSONField } |]
-  fromJSONFun <- [| genericParseJSON defaultOptions{ fieldLabelModifier = fromJSONField } |]
-  let derivings = map (\x -> DerivClause Nothing [conT' x]) [''Show, ''Eq, ''Ord, ''Generic]
+  fromJSONFun <- [| genericParseJSON defaultOptions{ fieldLabelModifier = toJSONField } |]
+  let genericArbType = AppT (ConT (mkName "GenericArbitrary")) (ConT typeName)
+  let arbitraryDeriv =
+        DerivClause
+          (Just (ViaStrategy genericArbType))
+          [ConT (mkName "Arbitrary")]
+  let derivings = arbitraryDeriv:map (\x -> DerivClause Nothing [conT' x]) [''Show, ''Eq, ''Ord, ''Generic]
   let toJSON = InstanceD Nothing [] (AppT (ConT $ mkName "ToJSON") (ConT typeName))  [FunD (mkName "toJSON") [Clause [] (NormalB toJSONFun) []]]
   let fromJSON = InstanceD Nothing [] (AppT (ConT $ mkName "FromJSON") (ConT typeName)) [FunD (mkName "parseJSON") [Clause [] (NormalB fromJSONFun) []]]
   case obj of
@@ -141,3 +146,26 @@ hsTypeTH entity = case entity of
 
 conT' :: Name -> Type
 conT' name = ConT $ removeInternal name
+
+
+genAllProps :: Monad m => [String] -> m [Dec]
+genAllProps propTypes = do
+  let testTreeT     = ConT (mkName "TestTree")
+      testGroupE    = VarE (mkName "testGroup")
+      testPropertyE = VarE (mkName "testProperty")
+      mkPropJsonE   = VarE (mkName "mkPropJsonRoundtrip")
+      propExprs =
+        [ AppE (AppE testPropertyE (LitE (StringL t)))
+               (AppTypeE mkPropJsonE (ConT $ mkName t))
+        | t <- propTypes
+        ]
+      body = AppE (AppE testGroupE (LitE (StringL "JSON roundtrip properties")))
+                  (ListE propExprs)
+  pure
+    [ SigD (mkName "allProps") testTreeT
+    , FunD (mkName "allProps") [Clause [] (NormalB body) []]
+    ]
+
+-- genAllProps :: Q [Dec]
+-- genAllProps propTypes = do
+--   pure $ map mkTest propTypes

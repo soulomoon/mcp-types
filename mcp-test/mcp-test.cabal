@@ -1,7 +1,7 @@
 cabal-version:      3.12
 name:               mcp-test
 version:            0.1.0.0
-synopsis: "MCP test"
+synopsis:           "MCP test"
 license:            BSD-3-Clause
 license-file:       LICENSE
 author:             Patrick
@@ -21,12 +21,10 @@ test-suite mcp-test
     main-is:          Main.hs
     build-depends:
         base >=4.7 && <5
-        , mcp-gen:mcp-gen-lib
+        , mcp-types
         , tasty
         , aeson
         , tasty-hunit
         , stm
         , async
         , process
-    build-tool-depends:
-        mcp-gen:mcp-gen

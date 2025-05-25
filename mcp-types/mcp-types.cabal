@@ -12,8 +12,8 @@ extra-doc-files:    CHANGELOG.md
 common warnings
     ghc-options: -Wall
 
-library mcp-generated-types
-    hs-source-dirs:   ./
+library
+    hs-source-dirs:   src
     exposed-modules:
         Network.Protocol.MCP.Types.Annotations
         ,Network.Protocol.MCP.Types.AudioContent
@@ -98,14 +98,35 @@ library mcp-generated-types
         ,Network.Protocol.MCP.Types.ToolAnnotations
         ,Network.Protocol.MCP.Types.ToolListChangedNotification
         ,Network.Protocol.MCP.Types.UnsubscribeRequest
-    
-    
+
+
     build-depends:
-                      base >=4.7 && <5
+                      QuickCheck ^>=2.15.0.1
+                      ,base >=4.7 && <5
                       ,ghc-prim
                       ,aeson
                       ,text
-    
+                      ,generic-arbitrary
+
+    ghc-options: -fconstraint-solver-iterations=10
     default-language: GHC2024
     other-modules:  Utils
     other-extensions: DuplicateRecordFields
+
+test-suite mcp-test
+    import:           warnings
+    default-language: GHC2024
+    type:             exitcode-stdio-1.0
+    hs-source-dirs:   test
+    other-modules:    Utils, Props
+    main-is:          Main.hs
+    build-depends:
+        base >=4.7 && <5
+        , mcp-types
+        , tasty
+        , aeson
+        , tasty-hunit
+        , tasty-quickcheck
+        , stm
+        , async
+        , process

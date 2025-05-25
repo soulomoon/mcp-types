@@ -8,21 +8,22 @@ module Main where
 import Data.List (intercalate)
 import Data.Text qualified as T
 import Gen (genMetaModel, getStructuresFromSchema)
-import GenTH (genDataTypesTH)
+import GenTH (genDataTypesTH, genAllProps)
 import Language.Haskell.TH (pprint, runQ)
 import System.Directory (createDirectoryIfMissing)
 import System.FilePath ((<.>), (</>))
 import Types (NameEntity)
-import Utils (getAllRefs, refToImport)
+import Utils (getAllRefs, refToImport, nameToImport)
 import GenName (GenName(..))
 import Data.Aeson (Value, defaultOptions, Options (..), genericToJSON, genericParseJSON)
+import Control.Arrow (Arrow(..))
 
 modulePath :: FilePath
 modulePath = "meta/schema.json"
 
-generatedDir :: FilePath
--- generatedDir = "generated"
-generatedDir = "mcp-types"
+generatedDir, generatedTestDir :: FilePath
+generatedDir = "mcp-types/src"
+generatedTestDir = "mcp-types/test"
 
 mcpNameSpace :: String
 mcpNameSpace = "Network.Protocol.MCP.Types"
@@ -49,6 +50,8 @@ genOne (name, s) = do
         unlines
           [ "{-# LANGUAGE DeriveGeneric #-}",
             "{-# LANGUAGE DuplicateRecordFields #-}",
+            "{-# LANGUAGE DuplicateRecordFields #-}",
+            "{-# LANGUAGE DerivingVia #-}",
             "",
             "module " ++ nameSpaceName ++ " where",
             "",
@@ -60,6 +63,8 @@ genOne (name, s) = do
             import qualified Data.Aeson as Data.Aeson.Types.Internal
             import qualified Data.Aeson as Data.Aeson.Types.FromJSON
             import qualified Data.Aeson as Data.Aeson.Types.ToJSON
+            import Test.QuickCheck (Arbitrary)
+            import Test.QuickCheck.Arbitrary.Generic (GenericArbitrary(..))
             import qualified Utils
             """,
             "",
@@ -109,6 +114,34 @@ genCabalFile modules =
 hang :: Int -> String -> String
 hang n str = unlines $ map (replicate n ' ' ++) (lines str)
 
+genTestModules :: [NameEntity] -> IO ()
+genTestModules structures = do
+  let testModuleName = "Props"
+      testFilePath = generatedTestDir </> (nameSpaceToPath testModuleName ++ ".hs")
+  putStrLn $ "Generating test module: " ++ testFilePath
+  allProps <- genAllProps $ (T.unpack . genTypeName . fst <$> structures)
+  let imports = map (\(name, _) -> nameToImport mcpNameSpace $ T.unpack name.genTypeName) structures
+      code =
+        unlines
+          [ "{-# LANGUAGE OverloadedStrings #-}",
+            "{-# LANGUAGE DuplicateRecordFields #-}",
+            "module " ++ testModuleName ++ " where",
+            "",
+            """
+            import Test.Tasty (TestTree, testGroup)
+            import Test.Tasty.QuickCheck (testProperty)
+            import Utils
+            """,
+            "",
+            unlines imports,
+            "",
+            pprint allProps,
+            "-- Add your tests here"
+          ]
+  createDirectoryIfMissing True (baseDir testFilePath)
+  writeFile testFilePath code
+  putStrLn $ "Test module written to: " ++ testFilePath
+
 main :: IO ()
 main = do
   putStrLn "\n-- parsing schema --\n"
@@ -117,10 +150,11 @@ main = do
   structures <- getStructuresFromSchema modulePath
   print $ "Structures: " ++ show structures
   mapM_ genOne structures
+  genTestModules structures
   putStrLn "\n-- Finished generating Haskell data types --\n"
-  let modules = map ((mcpNameSpace <.>) . T.unpack . genTypeName . fst) structures
-  let cabalFileContent = genCabalFile $ intercalate "\n," modules
-  putStrLn $ "Generated modules: \n" ++ cabalFileContent
-  let cabalFilePath = generatedDir </> "mcp-types.cabal"
-  writeFile cabalFilePath cabalFileContent
+  -- let modules = map ((mcpNameSpace <.>) . T.unpack . genTypeName . fst) structures
+  -- let cabalFileContent = genCabalFile $ intercalate "\n," modules
+  -- putStrLn $ "Generated modules: \n" ++ cabalFileContent
+  -- let cabalFilePath = generatedDir </> "mcp-types.cabal"
+  -- writeFile cabalFilePath cabalFileContent
   putStrLn "All generated files are in the generated directory."
