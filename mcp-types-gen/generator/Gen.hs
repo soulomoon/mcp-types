@@ -23,9 +23,6 @@ genMetaModel schemaPath = do
   let jsonTypes = filter (isJsonType . snd) sts
   putStrLn $ "number of json types " ++ show (length jsonTypes)
   mapM_ (putStrLn . ("JSON Type: " ++) . show) jsonTypes
-  -- let inspectKey = "RequestId"
-  -- let inspectValue = filter ((== inspectKey) . fst) sts
-  -- putStrLn $ "inspectValue: " ++ show inspectValue
   return md
 
 -- | Extracts structures [(NameEntity)] from a schema file
@@ -39,7 +36,6 @@ getStructuresFromSchema schemaPath = do
         Nothing -> fail "No 'definitions' field found in the schema."
         Just (Object defs) -> do
           let ds = kmKeyObjects defs
-          --  print ds
           let names = map (K.toText . fst) ds
           let entityEither = zip names $ map (parseEither buildEntity) ds
           let sts = rights (snd <$> entityEither)

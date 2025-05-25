@@ -44,11 +44,6 @@ renameField t = case t of
   "data" -> "data_"
   "type" -> "type_"
   _ -> t
--- renameField "_meta" = "meta_"
--- renameField "data" = "data_"
--- renameField "type" = "type_"
--- renameField fieldName = fieldName
-
 
 
 instance FromJSON GenName where

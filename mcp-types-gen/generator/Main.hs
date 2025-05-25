@@ -5,7 +5,6 @@
 
 module Main where
 
-import Data.List (intercalate)
 import Data.Text qualified as T
 import Gen (genMetaModel, getStructuresFromSchema)
 import GenTH (genDataTypesTH, genAllProps)
@@ -15,8 +14,6 @@ import System.FilePath ((<.>), (</>))
 import Types (NameEntity)
 import Utils (getAllRefs, refToImport, nameToImport)
 import GenName (GenName(..))
-import Data.Aeson (Value, defaultOptions, Options (..), genericToJSON, genericParseJSON)
-import Control.Arrow (Arrow(..))
 
 modulePath :: FilePath
 modulePath = "meta/schema.json"
