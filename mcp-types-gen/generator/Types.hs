@@ -1,27 +1,29 @@
-{-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE DeriveGeneric         #-}
 {-# LANGUAGE DuplicateRecordFields #-}
-{-# LANGUAGE MultilineStrings #-}
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE MultilineStrings      #-}
+{-# LANGUAGE OverloadedStrings     #-}
 
 module Types where
 
-import Control.Applicative ((<|>))
-import Data.Aeson (FromJSON, Result (..), Value (..), fromJSON)
-import Data.Aeson.Key qualified as K
-import Data.Aeson.KeyMap qualified as KM
-import Data.Aeson.Types (Parser, parseJSON, withObject, (.:), (.:?))
-import Data.Data (Data)
-import Data.Map qualified as M
-import Data.Maybe (mapMaybe)
-import Data.Text qualified as T
-import GenName (GenName)
+import           Control.Applicative ((<|>))
+import           Data.Aeson          (FromJSON, Result (..), Value (..),
+                                      fromJSON)
+import qualified Data.Aeson.Key      as K
+import qualified Data.Aeson.KeyMap   as KM
+import           Data.Aeson.Types    (Parser, parseJSON, withObject, (.:),
+                                      (.:?))
+import           Data.Data           (Data)
+import qualified Data.Map            as M
+import           Data.Maybe          (mapMaybe)
+import qualified Data.Text           as T
+import           GenName             (GenName)
 
 -- Reference type
 
 type NameEntity = (GenName, SEntity)
 
 data Ref = Ref
-  { refValue :: T.Text,
+  { refValue       :: T.Text,
     refDescription :: Maybe T.Text
   }
   deriving (Show, Eq, Ord, Data)
@@ -35,8 +37,8 @@ instance FromJSON Ref where
 -- String type
 
 data SString = SString
-  { sConst :: Maybe T.Text,
-    enumValues :: Maybe [T.Text],
+  { sConst       :: Maybe T.Text,
+    enumValues   :: Maybe [T.Text],
     sDescription :: Maybe T.Text
   }
   deriving (Show, Eq, Ord, Data)
@@ -51,7 +53,7 @@ instance FromJSON SString where
 -- Number type
 
 data SNumber = SNumber
-  { sRange :: Maybe (Int, Int),
+  { sRange       :: Maybe (Int, Int),
     sDescription :: Maybe T.Text
   }
   deriving (Show, Eq, Ord, Data)
@@ -62,14 +64,14 @@ instance FromJSON SNumber where
     maxValue <- obj .:? "maximum"
     range <- case (minValue, maxValue) of
       (Just minV, Just maxV) -> return $ Just (minV, maxV)
-      _ -> return Nothing
+      _                      -> return Nothing
     des <- obj .:? "description"
     return $ SNumber range des
 
 -- Boolean type
 
 data SBoolean = SBoolean
-  { sConst :: Maybe Bool,
+  { sConst       :: Maybe Bool,
     sDescription :: Maybe T.Text
   }
   deriving (Show, Eq, Ord, Data)
@@ -83,7 +85,7 @@ instance FromJSON SBoolean where
 -- TypeList type
 
 data STypeAlternative = STypeAlternative
-  { sTypes :: [T.Text],
+  { sTypes       :: [T.Text],
     sDescription :: Maybe T.Text
   }
   deriving (Show, Eq, Ord, Data)
@@ -109,7 +111,7 @@ instance FromJSON SJSON where
 -- Array type
 
 data SArray = Array_
-  { item :: SEntity,
+  { item        :: SEntity,
     description :: Maybe T.Text
   }
   deriving (Show, Eq, Ord, Data)
@@ -123,9 +125,9 @@ instance FromJSON SArray where
 -- Object type
 
 data SObject = SObject
-  { sProperties :: M.Map GenName SEntity,
+  { sProperties  :: M.Map GenName SEntity,
     sDescription :: Maybe T.Text,
-    sRequired :: Maybe [T.Text]
+    sRequired    :: Maybe [T.Text]
   }
   deriving (Show, Eq, Ord, Data)
 
@@ -136,7 +138,7 @@ instance FromJSON SObject where
     required <- obj .:? "required"
     case properties of
       Just props -> return $ SObject props des required
-      Nothing -> return $ SObject M.empty des required
+      Nothing    -> return $ SObject M.empty des required
 
 data SEntity
   = SStringType SString
@@ -159,14 +161,14 @@ instance FromJSON SEntity where
     mTypeVal <- obj .:? "type" :: Parser (Maybe Value)
     case mTypeVal of
       Just (String t) -> case lowerFirst t of
-        "string" -> SStringType <$> parseJSON (Object obj)
-        "number" -> SNumberType <$> parseJSON (Object obj)
+        "string"  -> SStringType <$> parseJSON (Object obj)
+        "number"  -> SNumberType <$> parseJSON (Object obj)
         "integer" -> SIntegerType <$> parseJSON (Object obj)
-        "array" -> SArrayType <$> parseJSON (Object obj)
+        "array"   -> SArrayType <$> parseJSON (Object obj)
         -- "array"   -> error "SEntity: Array type should be handled separately"
-        "object" -> SObjectType <$> parseJSON (Object obj)
+        "object"  -> SObjectType <$> parseJSON (Object obj)
         "boolean" -> SBooleanType <$> parseJSON (Object obj)
-        _ -> fail $ "SEntity: Unsupported type: " ++ show t
+        _         -> fail $ "SEntity: Unsupported type: " ++ show t
       Just (Array _) -> STypeAlternativeTypeAlternative <$> parseJSON (Object obj)
       Nothing ->
         (SRef <$> parseJSON (Object obj))
@@ -179,11 +181,11 @@ instance FromJSON SEntity where
         oneOfList <- o .:? "anyOf"
         case oneOfList of
           Just oneOf -> SOneOf <$> mapM parseJSON oneOf
-          Nothing -> fail "No 'oneOf' field found."
+          Nothing    -> fail "No 'oneOf' field found."
 
 isJsonType :: SEntity -> Bool
 isJsonType (SJSONType _) = True
-isJsonType _ = False
+isJsonType _             = False
 
 -- MetaModel type
 newtype MetaModel = MetaModel
@@ -206,6 +208,6 @@ kmKeyObjects obj =
   mapMaybe
     ( \(k, v) -> case fromJSON v of
         Success o -> Just (k, o)
-        _ -> Nothing
+        _         -> Nothing
     )
     (KM.toList obj)

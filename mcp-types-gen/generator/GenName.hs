@@ -1,18 +1,20 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 module GenName where
-import Data.Text (Text)
-import qualified Data.Text as T
-import Data.Data (Data)
-import Data.Aeson (FromJSON, withText, FromJSONKey (fromJSONKey))
-import Data.Aeson.Types (FromJSON(..), FromJSONKeyFunction(FromJSONKeyText))
-import Data.Generics ()
-import GHC.Generics (Generic)
+import           Data.Aeson       (FromJSON, FromJSONKey (fromJSONKey),
+                                   withText)
+import           Data.Aeson.Types (FromJSON (..),
+                                   FromJSONKeyFunction (FromJSONKeyText))
+import           Data.Data        (Data)
+import           Data.Generics    ()
+import           Data.Text        (Text)
+import qualified Data.Text        as T
+import           GHC.Generics     (Generic)
 
 
 data GenName = GenName
   { genOrigName :: Text,
-    genHsName :: Text,
+    genHsName   :: Text,
     genTypeName :: Text
   }
   deriving (Show, Eq, Data, Ord, Generic)
@@ -41,9 +43,9 @@ fromOrigName origName =
 renameField :: Text -> Text
 renameField t = case t of
   "_meta" -> "meta_"
-  "data" -> "data_"
-  "type" -> "type_"
-  _ -> t
+  "data"  -> "data_"
+  "type"  -> "type_"
+  _       -> t
 
 
 instance FromJSON GenName where

@@ -1,18 +1,19 @@
 {-# LANGUAGE DuplicateRecordFields #-}
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE OverloadedStrings     #-}
 
 
 module Gen (genMetaModel, getStructuresFromSchema) where
 
-import Control.Monad (unless)
-import Data.Aeson (FromJSON (parseJSON), Value (..), eitherDecode)
-import Data.Aeson.Key qualified as K
-import Data.Aeson.KeyMap qualified as KM
-import Data.Aeson.Types (Parser, parseEither)
-import Data.ByteString.Lazy qualified as B
-import Data.Either (lefts, rights)
-import Types
-import GenName (fromOrigName)
+import           Control.Monad        (unless)
+import           Data.Aeson           (FromJSON (parseJSON), Value (..),
+                                       eitherDecode)
+import qualified Data.Aeson.Key       as K
+import qualified Data.Aeson.KeyMap    as KM
+import           Data.Aeson.Types     (Parser, parseEither)
+import qualified Data.ByteString.Lazy as B
+import           Data.Either          (lefts, rights)
+import           GenName              (fromOrigName)
+import           Types
 
 genMetaModel :: FilePath -> IO MetaModel
 genMetaModel schemaPath = do

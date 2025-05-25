@@ -1,27 +1,33 @@
-{-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE DeriveGeneric         #-}
+{-# LANGUAGE DerivingVia           #-}
 {-# LANGUAGE DuplicateRecordFields #-}
-{-# LANGUAGE DuplicateRecordFields #-}
-{-# LANGUAGE DerivingVia #-}
 
 module Network.Protocol.MCP.Types.InitializeRequest where
 
-import Prelude
-import Data.Aeson (Value, FromJSON, ToJSON, defaultOptions, Options (..), genericToJSON, genericParseJSON, toJSON, parseJSON)
-import Data.Text (Text)
-import GHC.Generics (Generic)
-import qualified Data.Aeson as Data.Aeson.Types.Internal
-import qualified Data.Aeson as Data.Aeson.Types.FromJSON
-import qualified Data.Aeson as Data.Aeson.Types.ToJSON
-import Test.QuickCheck (Arbitrary)
-import Test.QuickCheck.Arbitrary.Generic (GenericArbitrary(..))
+import           Data.Aeson                                    (FromJSON,
+                                                                Options (..),
+                                                                ToJSON, Value,
+                                                                defaultOptions,
+                                                                genericParseJSON,
+                                                                genericToJSON,
+                                                                parseJSON,
+                                                                toJSON)
+import qualified Data.Aeson                                    as Data.Aeson.Types.FromJSON
+import qualified Data.Aeson                                    as Data.Aeson.Types.Internal
+import qualified Data.Aeson                                    as Data.Aeson.Types.ToJSON
+import           Data.Text                                     (Text)
+import           GHC.Generics                                  (Generic)
+import           Prelude
+import           Test.QuickCheck                               (Arbitrary)
+import           Test.QuickCheck.Arbitrary.Generic             (GenericArbitrary (..))
 import qualified Utils
 
-import Network.Protocol.MCP.Types.ClientCapabilities(ClientCapabilities)
-import Network.Protocol.MCP.Types.Implementation(Implementation)
+import           Network.Protocol.MCP.Types.ClientCapabilities (ClientCapabilities)
+import           Network.Protocol.MCP.Types.Implementation     (Implementation)
 
 data Params
-    = Params {capabilities :: ClientCapabilities,
-              clientInfo :: Implementation,
+    = Params {capabilities    :: ClientCapabilities,
+              clientInfo      :: Implementation,
               protocolVersion :: Text}
     deriving Arbitrary via (GenericArbitrary Params)
     deriving Show

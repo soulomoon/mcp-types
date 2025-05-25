@@ -1,23 +1,25 @@
-{-# LANGUAGE OrPatterns #-}
+{-# LANGUAGE OrPatterns          #-}
 {-# LANGUAGE OverloadedRecordDot #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE OverloadedStrings   #-}
+{-# LANGUAGE TemplateHaskell     #-}
 
 module GenTH (genDataTypesTH, genDataTypeTH, hsTypeTH, genAllProps) where
 
-import Control.Monad.RWS (MonadWriter)
-import Control.Monad.Writer (MonadWriter (..))
-import Control.Monad.Writer.Strict (runWriter)
-import Data.Aeson (Value, defaultOptions, Options (..), genericToJSON, genericParseJSON)
-import Data.Map qualified as M
-import Data.Text (Text)
-import Data.Text qualified as T
-import Debug.Trace (traceM)
-import Language.Haskell.TH
-import Types
-import Utils
-import GenName
-import Data.Generics (Generic)
+import           Control.Monad.RWS           (MonadWriter)
+import           Control.Monad.Writer        (MonadWriter (..))
+import           Control.Monad.Writer.Strict (runWriter)
+import           Data.Aeson                  (Options (..), Value,
+                                              defaultOptions, genericParseJSON,
+                                              genericToJSON)
+import           Data.Generics               (Generic)
+import qualified Data.Map                    as M
+import           Data.Text                   (Text)
+import qualified Data.Text                   as T
+import           Debug.Trace                 (traceM)
+import           GenName
+import           Language.Haskell.TH
+import           Types
+import           Utils
 
 -- | Generate Haskell data type declarations from schema definitions using Template Haskell
 genDataTypesTH :: [NameEntity] -> Q [Dec]
@@ -34,14 +36,14 @@ deriveJsonTH :: NameEntity -> Q [Dec]
 deriveJsonTH (name, obj) =
   case obj of
     SObjectType _ -> pure []
-    _ -> pure []
+    _             -> pure []
 
 goExpandObj :: (MonadWriter [(NameEntity)] m) => NameEntity -> m ()
 goExpandObj item@(_, obj) = do
   newItem <- expandObj item
   case obj of
     SObjectType _ -> return ()
-    _ -> tell [(fst item, newItem)]
+    _             -> tell [(fst item, newItem)]
 
 expandObj :: (MonadWriter [(NameEntity)] m) => NameEntity -> m SEntity
 expandObj (name, obj) = do

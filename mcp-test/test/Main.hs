@@ -1,9 +1,9 @@
 module Main (main) where
 
-import Test.Tasty (defaultMain, testGroup)
-import System.Process (readProcess)
-import Test.Tasty.HUnit (testCase, (@?=))
-import Data.List (isInfixOf)
+import           Data.List        (isInfixOf)
+import           System.Process   (readProcess)
+import           Test.Tasty       (defaultMain, testGroup)
+import           Test.Tasty.HUnit (testCase, (@?=))
 -- import Network.Protocol.MCP.Types.Test (allProps) -- Add this import
 
 main :: IO ()

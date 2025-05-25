@@ -1,9 +1,9 @@
 module Utils where
-import Test.QuickCheck (Arbitrary)
-import Data.Text (Text)
-import Test.QuickCheck.Arbitrary (Arbitrary(arbitrary))
-import qualified Data.Text as T
-import Data.Aeson (decode, encode, ToJSON, FromJSON)
+import           Data.Aeson                (FromJSON, ToJSON, decode, encode)
+import           Data.Text                 (Text)
+import qualified Data.Text                 as T
+import           Test.QuickCheck           (Arbitrary)
+import           Test.QuickCheck.Arbitrary (Arbitrary (arbitrary))
 
 toJSONField :: String -> String
 toJSONField fieldName =
@@ -11,7 +11,7 @@ toJSONField fieldName =
     "meta_" -> "_meta"
     "data_" -> "_data"
     "type_" -> "_type"
-    _ -> fieldName
+    _       -> fieldName
 
 
 instance (Arbitrary Text) where

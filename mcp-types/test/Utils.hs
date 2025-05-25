@@ -1,6 +1,6 @@
 module Utils where
 
-import Data.Aeson (decode, encode, ToJSON, FromJSON)
+import           Data.Aeson (FromJSON, ToJSON, decode, encode)
 
 
 mkPropJsonRoundtrip :: (FromJSON a, ToJSON a, Eq a) => a -> Bool

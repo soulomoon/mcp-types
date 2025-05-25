@@ -1,19 +1,19 @@
-{-# LANGUAGE MultilineStrings #-}
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE MultilineStrings    #-}
 {-# LANGUAGE OverloadedRecordDot #-}
-{-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE OverloadedStrings   #-}
+{-# LANGUAGE TemplateHaskell     #-}
 
 module Main where
 
-import Data.Text qualified as T
-import Gen (genMetaModel, getStructuresFromSchema)
-import GenTH (genDataTypesTH, genAllProps)
-import Language.Haskell.TH (pprint, runQ)
-import System.Directory (createDirectoryIfMissing)
-import System.FilePath ((<.>), (</>))
-import Types (NameEntity)
-import Utils (getAllRefs, refToImport, nameToImport)
-import GenName (GenName(..))
+import qualified Data.Text           as T
+import           Gen                 (genMetaModel, getStructuresFromSchema)
+import           GenName             (GenName (..))
+import           GenTH               (genAllProps, genDataTypesTH)
+import           Language.Haskell.TH (pprint, runQ)
+import           System.Directory    (createDirectoryIfMissing)
+import           System.FilePath     ((<.>), (</>))
+import           Types               (NameEntity)
+import           Utils               (getAllRefs, nameToImport, refToImport)
 
 modulePath :: FilePath
 modulePath = "meta/schema.json"

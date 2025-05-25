@@ -1,7 +1,7 @@
 module Main (main) where
 
-import Test.Tasty (defaultMain, testGroup)
-import Props (allProps)
+import           Props      (allProps)
+import           Test.Tasty (defaultMain, testGroup)
 
 main :: IO ()
 main = defaultMain $ testGroup "All Tests"
