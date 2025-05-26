@@ -68,6 +68,7 @@ cabal test
 - [x] Add property-based roundtrip tests
 - [x] Add code formatting and pre-commit hooks
 - [ ] Add more unit tests
+- [ ] Add github actions for CI
 - [ ] Support more ghc versions
 
 ### Contributing
