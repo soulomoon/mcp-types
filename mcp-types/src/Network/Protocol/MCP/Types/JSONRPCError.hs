@@ -23,7 +23,7 @@ import qualified Utils
 import           Network.Protocol.MCP.Types.RequestId (RequestId)
 
 data Error
-    = Error {code :: Int, data_ :: Value, message :: Text}
+    = Error {code :: Int, data_ :: (Maybe Value), message :: Text}
     deriving Arbitrary via (GenericArbitrary Error)
     deriving Show
     deriving Eq

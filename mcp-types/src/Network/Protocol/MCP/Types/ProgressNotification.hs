@@ -24,10 +24,10 @@ import qualified Utils
 import           Network.Protocol.MCP.Types.ProgressToken (ProgressToken)
 
 data Params
-    = Params {message       :: Text,
+    = Params {message       :: (Maybe Text),
               progress      :: Double,
               progressToken :: ProgressToken,
-              total         :: Double}
+              total         :: (Maybe Double)}
     deriving Arbitrary via (GenericArbitrary Params)
     deriving Show
     deriving Eq

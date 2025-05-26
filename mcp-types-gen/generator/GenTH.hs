@@ -121,9 +121,13 @@ genDataTypeTH (name, obj) = do
     typeListFields :: GenName -> [Text] -> Q [Con]
     typeListFields prefix = mapM (typeListField prefix)
     propertiesField object =
-      [ (fName, hsTypeTH fType)
+      [ (fName, wrapMaybe (sRequired object) fName $ hsTypeTH fType)
       | (fName, fType) <- M.toList (sProperties object)
       ]
+    -- wrapMaybe :: sRequired
+    wrapMaybe :: Maybe [T.Text] -> GenName -> Type -> Type
+    wrapMaybe (Just xs) fName pType | fName.genOrigName `elem` xs = pType
+    wrapMaybe _ _ pType = AppT (ConT $ mkName "Maybe") pType
 
 -- | Map SEntity to Haskell type (TH Type)
 hsTypeTH :: SEntity -> Type

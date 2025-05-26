@@ -25,7 +25,7 @@ import           Network.Protocol.MCP.Types.ProgressToken (ProgressToken)
 import           Network.Protocol.MCP.Types.RequestId     (RequestId)
 
 data Meta_
-    = Meta_ {progressToken :: ProgressToken}
+    = Meta_ {progressToken :: (Maybe ProgressToken)}
     deriving Arbitrary via (GenericArbitrary Meta_)
     deriving Show
     deriving Eq
@@ -36,7 +36,7 @@ instance ToJSON Meta_
 instance FromJSON Meta_
     where {parseJSON = Data.Aeson.Types.FromJSON.genericParseJSON Data.Aeson.Types.Internal.defaultOptions{Data.Aeson.Types.Internal.fieldLabelModifier = Utils.toJSONField}}
 data Params
-    = Params {meta_ :: Meta_}
+    = Params {meta_ :: (Maybe Meta_)}
     deriving Arbitrary via (GenericArbitrary Params)
     deriving Show
     deriving Eq
@@ -50,7 +50,7 @@ data JSONRPCRequest
     = JSONRPCRequest {id      :: RequestId,
                       jsonrpc :: Text,
                       method  :: Text,
-                      params  :: Params}
+                      params  :: (Maybe Params)}
     deriving Arbitrary via (GenericArbitrary JSONRPCRequest)
     deriving Show
     deriving Eq

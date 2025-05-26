@@ -33,7 +33,7 @@ instance ToJSON Arguments
 instance FromJSON Arguments
     where {parseJSON = Data.Aeson.Types.FromJSON.genericParseJSON Data.Aeson.Types.Internal.defaultOptions{Data.Aeson.Types.Internal.fieldLabelModifier = Utils.toJSONField}}
 data Params
-    = Params {arguments :: Arguments, name :: Text}
+    = Params {arguments :: (Maybe Arguments), name :: Text}
     deriving Arbitrary via (GenericArbitrary Params)
     deriving Show
     deriving Eq

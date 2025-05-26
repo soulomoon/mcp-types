@@ -33,7 +33,9 @@ instance ToJSON Meta_
 instance FromJSON Meta_
     where {parseJSON = Data.Aeson.Types.FromJSON.genericParseJSON Data.Aeson.Types.Internal.defaultOptions{Data.Aeson.Types.Internal.fieldLabelModifier = Utils.toJSONField}}
 data Completion
-    = Completion {hasMore :: Bool, total :: Int, values :: [Text]}
+    = Completion {hasMore :: (Maybe Bool),
+                  total   :: (Maybe Int),
+                  values  :: [Text]}
     deriving Arbitrary via (GenericArbitrary Completion)
     deriving Show
     deriving Eq
@@ -44,7 +46,7 @@ instance ToJSON Completion
 instance FromJSON Completion
     where {parseJSON = Data.Aeson.Types.FromJSON.genericParseJSON Data.Aeson.Types.Internal.defaultOptions{Data.Aeson.Types.Internal.fieldLabelModifier = Utils.toJSONField}}
 data CompleteResult
-    = CompleteResult {meta_ :: Meta_, completion :: Completion}
+    = CompleteResult {meta_ :: (Maybe Meta_), completion :: Completion}
     deriving Arbitrary via (GenericArbitrary CompleteResult)
     deriving Show
     deriving Eq

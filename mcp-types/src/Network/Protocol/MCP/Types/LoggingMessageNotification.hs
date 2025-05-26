@@ -23,7 +23,9 @@ import qualified Utils
 import           Network.Protocol.MCP.Types.LoggingLevel (LoggingLevel)
 
 data Params
-    = Params {data_ :: Value, level :: LoggingLevel, logger :: Text}
+    = Params {data_  :: Value,
+              level  :: LoggingLevel,
+              logger :: (Maybe Text)}
     deriving Arbitrary via (GenericArbitrary Params)
     deriving Show
     deriving Eq

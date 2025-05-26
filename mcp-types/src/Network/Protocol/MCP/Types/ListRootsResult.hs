@@ -34,7 +34,7 @@ instance ToJSON Meta_
 instance FromJSON Meta_
     where {parseJSON = Data.Aeson.Types.FromJSON.genericParseJSON Data.Aeson.Types.Internal.defaultOptions{Data.Aeson.Types.Internal.fieldLabelModifier = Utils.toJSONField}}
 data ListRootsResult
-    = ListRootsResult {meta_ :: Meta_, roots :: [Root]}
+    = ListRootsResult {meta_ :: (Maybe Meta_), roots :: [Root]}
     deriving Arbitrary via (GenericArbitrary ListRootsResult)
     deriving Show
     deriving Eq

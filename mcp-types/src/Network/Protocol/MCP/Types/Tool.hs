@@ -35,8 +35,8 @@ instance ToJSON Properties
 instance FromJSON Properties
     where {parseJSON = Data.Aeson.Types.FromJSON.genericParseJSON Data.Aeson.Types.Internal.defaultOptions{Data.Aeson.Types.Internal.fieldLabelModifier = Utils.toJSONField}}
 data InputSchema
-    = InputSchema {properties :: Properties,
-                   required   :: [Text],
+    = InputSchema {properties :: (Maybe Properties),
+                   required   :: (Maybe [Text]),
                    type_      :: Text}
     deriving Arbitrary via (GenericArbitrary InputSchema)
     deriving Show
@@ -48,8 +48,8 @@ instance ToJSON InputSchema
 instance FromJSON InputSchema
     where {parseJSON = Data.Aeson.Types.FromJSON.genericParseJSON Data.Aeson.Types.Internal.defaultOptions{Data.Aeson.Types.Internal.fieldLabelModifier = Utils.toJSONField}}
 data Tool
-    = Tool {annotations :: ToolAnnotations,
-            description :: Text,
+    = Tool {annotations :: (Maybe ToolAnnotations),
+            description :: (Maybe Text),
             inputSchema :: InputSchema,
             name        :: Text}
     deriving Arbitrary via (GenericArbitrary Tool)

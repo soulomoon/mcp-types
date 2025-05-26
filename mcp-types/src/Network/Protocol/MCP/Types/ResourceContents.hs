@@ -22,7 +22,7 @@ import qualified Utils
 
 
 data ResourceContents
-    = ResourceContents {mimeType :: Text, uri :: Text}
+    = ResourceContents {mimeType :: (Maybe Text), uri :: Text}
     deriving Arbitrary via (GenericArbitrary ResourceContents)
     deriving Show
     deriving Eq

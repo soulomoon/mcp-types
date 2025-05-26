@@ -36,14 +36,14 @@ instance ToJSON Metadata
 instance FromJSON Metadata
     where {parseJSON = Data.Aeson.Types.FromJSON.genericParseJSON Data.Aeson.Types.Internal.defaultOptions{Data.Aeson.Types.Internal.fieldLabelModifier = Utils.toJSONField}}
 data Params
-    = Params {includeContext   :: Text,
+    = Params {includeContext   :: (Maybe Text),
               maxTokens        :: Int,
               messages         :: [SamplingMessage],
-              metadata         :: Metadata,
-              modelPreferences :: ModelPreferences,
-              stopSequences    :: [Text],
-              systemPrompt     :: Text,
-              temperature      :: Double}
+              metadata         :: (Maybe Metadata),
+              modelPreferences :: (Maybe ModelPreferences),
+              stopSequences    :: (Maybe [Text]),
+              systemPrompt     :: (Maybe Text),
+              temperature      :: (Maybe Double)}
     deriving Arbitrary via (GenericArbitrary Params)
     deriving Show
     deriving Eq

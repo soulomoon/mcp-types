@@ -23,7 +23,7 @@ import qualified Utils
 import           Network.Protocol.MCP.Types.Annotations (Annotations)
 
 data TextContent
-    = TextContent {annotations :: Annotations,
+    = TextContent {annotations :: (Maybe Annotations),
                    text        :: Text,
                    type_       :: Text}
     deriving Arbitrary via (GenericArbitrary TextContent)

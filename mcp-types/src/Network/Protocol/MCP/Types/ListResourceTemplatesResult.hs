@@ -35,8 +35,8 @@ instance ToJSON Meta_
 instance FromJSON Meta_
     where {parseJSON = Data.Aeson.Types.FromJSON.genericParseJSON Data.Aeson.Types.Internal.defaultOptions{Data.Aeson.Types.Internal.fieldLabelModifier = Utils.toJSONField}}
 data ListResourceTemplatesResult
-    = ListResourceTemplatesResult {meta_             :: Meta_,
-                                   nextCursor        :: Text,
+    = ListResourceTemplatesResult {meta_             :: (Maybe Meta_),
+                                   nextCursor        :: (Maybe Text),
                                    resourceTemplates :: [ResourceTemplate]}
     deriving Arbitrary via (GenericArbitrary ListResourceTemplatesResult)
     deriving Show

@@ -23,7 +23,8 @@ import qualified Utils
 import           Network.Protocol.MCP.Types.Role   (Role)
 
 data Annotations
-    = Annotations {audience :: [Role], priority :: Double}
+    = Annotations {audience :: (Maybe [Role]),
+                   priority :: (Maybe Double)}
     deriving Arbitrary via (GenericArbitrary Annotations)
     deriving Show
     deriving Eq

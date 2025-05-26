@@ -27,7 +27,7 @@ import           Network.Protocol.MCP.Types.BlobResourceContents (BlobResourceCo
 import           Network.Protocol.MCP.Types.TextResourceContents (TextResourceContents)
 
 data EmbeddedResource
-    = EmbeddedResource {annotations :: Annotations,
+    = EmbeddedResource {annotations :: (Maybe Annotations),
                         resource :: (Either TextResourceContents BlobResourceContents),
                         type_ :: Text}
     deriving Arbitrary via (GenericArbitrary EmbeddedResource)

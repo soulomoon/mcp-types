@@ -22,9 +22,9 @@ import qualified Utils
 
 
 data PromptArgument
-    = PromptArgument {description :: Text,
+    = PromptArgument {description :: (Maybe Text),
                       name        :: Text,
-                      required    :: Bool}
+                      required    :: (Maybe Bool)}
     deriving Arbitrary via (GenericArbitrary PromptArgument)
     deriving Show
     deriving Eq

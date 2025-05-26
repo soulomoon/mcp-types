@@ -37,9 +37,9 @@ instance ToJSON Meta_
 instance FromJSON Meta_
     where {parseJSON = Data.Aeson.Types.FromJSON.genericParseJSON Data.Aeson.Types.Internal.defaultOptions{Data.Aeson.Types.Internal.fieldLabelModifier = Utils.toJSONField}}
 data InitializeResult
-    = InitializeResult {meta_           :: Meta_,
+    = InitializeResult {meta_           :: (Maybe Meta_),
                         capabilities    :: ServerCapabilities,
-                        instructions    :: Text,
+                        instructions    :: (Maybe Text),
                         protocolVersion :: Text,
                         serverInfo      :: Implementation}
     deriving Arbitrary via (GenericArbitrary InitializeResult)

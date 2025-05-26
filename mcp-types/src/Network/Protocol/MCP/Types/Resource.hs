@@ -23,11 +23,11 @@ import qualified Utils
 import           Network.Protocol.MCP.Types.Annotations (Annotations)
 
 data Resource
-    = Resource {annotations :: Annotations,
-                description :: Text,
-                mimeType    :: Text,
+    = Resource {annotations :: (Maybe Annotations),
+                description :: (Maybe Text),
+                mimeType    :: (Maybe Text),
                 name        :: Text,
-                size        :: Int,
+                size        :: (Maybe Int),
                 uri         :: Text}
     deriving Arbitrary via (GenericArbitrary Resource)
     deriving Show

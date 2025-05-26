@@ -33,7 +33,7 @@ instance ToJSON Experimental
 instance FromJSON Experimental
     where {parseJSON = Data.Aeson.Types.FromJSON.genericParseJSON Data.Aeson.Types.Internal.defaultOptions{Data.Aeson.Types.Internal.fieldLabelModifier = Utils.toJSONField}}
 data Roots
-    = Roots {listChanged :: Bool}
+    = Roots {listChanged :: (Maybe Bool)}
     deriving Arbitrary via (GenericArbitrary Roots)
     deriving Show
     deriving Eq
@@ -55,9 +55,9 @@ instance ToJSON Sampling
 instance FromJSON Sampling
     where {parseJSON = Data.Aeson.Types.FromJSON.genericParseJSON Data.Aeson.Types.Internal.defaultOptions{Data.Aeson.Types.Internal.fieldLabelModifier = Utils.toJSONField}}
 data ClientCapabilities
-    = ClientCapabilities {experimental :: Experimental,
-                          roots        :: Roots,
-                          sampling     :: Sampling}
+    = ClientCapabilities {experimental :: (Maybe Experimental),
+                          roots        :: (Maybe Roots),
+                          sampling     :: (Maybe Sampling)}
     deriving Arbitrary via (GenericArbitrary ClientCapabilities)
     deriving Show
     deriving Eq

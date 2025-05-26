@@ -22,7 +22,7 @@ import qualified Utils
 
 
 data Params
-    = Params {cursor :: Text}
+    = Params {cursor :: (Maybe Text)}
     deriving Arbitrary via (GenericArbitrary Params)
     deriving Show
     deriving Eq
@@ -33,7 +33,7 @@ instance ToJSON Params
 instance FromJSON Params
     where {parseJSON = Data.Aeson.Types.FromJSON.genericParseJSON Data.Aeson.Types.Internal.defaultOptions{Data.Aeson.Types.Internal.fieldLabelModifier = Utils.toJSONField}}
 data ListToolsRequest
-    = ListToolsRequest {method :: Text, params :: Params}
+    = ListToolsRequest {method :: Text, params :: (Maybe Params)}
     deriving Arbitrary via (GenericArbitrary ListToolsRequest)
     deriving Show
     deriving Eq

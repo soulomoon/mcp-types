@@ -23,9 +23,9 @@ import qualified Utils
 import           Network.Protocol.MCP.Types.Annotations (Annotations)
 
 data ResourceTemplate
-    = ResourceTemplate {annotations :: Annotations,
-                        description :: Text,
-                        mimeType    :: Text,
+    = ResourceTemplate {annotations :: (Maybe Annotations),
+                        description :: (Maybe Text),
+                        mimeType    :: (Maybe Text),
                         name        :: Text,
                         uriTemplate :: Text}
     deriving Arbitrary via (GenericArbitrary ResourceTemplate)

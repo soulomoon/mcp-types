@@ -23,10 +23,10 @@ import qualified Utils
 import           Network.Protocol.MCP.Types.ModelHint (ModelHint)
 
 data ModelPreferences
-    = ModelPreferences {costPriority         :: Double,
-                        hints                :: [ModelHint],
-                        intelligencePriority :: Double,
-                        speedPriority        :: Double}
+    = ModelPreferences {costPriority         :: (Maybe Double),
+                        hints                :: (Maybe [ModelHint]),
+                        intelligencePriority :: (Maybe Double),
+                        speedPriority        :: (Maybe Double)}
     deriving Arbitrary via (GenericArbitrary ModelPreferences)
     deriving Show
     deriving Eq

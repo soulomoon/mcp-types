@@ -34,8 +34,8 @@ instance ToJSON Meta_
 instance FromJSON Meta_
     where {parseJSON = Data.Aeson.Types.FromJSON.genericParseJSON Data.Aeson.Types.Internal.defaultOptions{Data.Aeson.Types.Internal.fieldLabelModifier = Utils.toJSONField}}
 data ListToolsResult
-    = ListToolsResult {meta_      :: Meta_,
-                       nextCursor :: Text,
+    = ListToolsResult {meta_      :: (Maybe Meta_),
+                       nextCursor :: (Maybe Text),
                        tools      :: [Tool]}
     deriving Arbitrary via (GenericArbitrary ListToolsResult)
     deriving Show

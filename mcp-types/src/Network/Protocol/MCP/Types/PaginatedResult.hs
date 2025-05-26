@@ -33,7 +33,8 @@ instance ToJSON Meta_
 instance FromJSON Meta_
     where {parseJSON = Data.Aeson.Types.FromJSON.genericParseJSON Data.Aeson.Types.Internal.defaultOptions{Data.Aeson.Types.Internal.fieldLabelModifier = Utils.toJSONField}}
 data PaginatedResult
-    = PaginatedResult {meta_ :: Meta_, nextCursor :: Text}
+    = PaginatedResult {meta_      :: (Maybe Meta_),
+                       nextCursor :: (Maybe Text)}
     deriving Arbitrary via (GenericArbitrary PaginatedResult)
     deriving Show
     deriving Eq

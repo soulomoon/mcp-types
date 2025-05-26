@@ -33,7 +33,7 @@ instance ToJSON Meta_
 instance FromJSON Meta_
     where {parseJSON = Data.Aeson.Types.FromJSON.genericParseJSON Data.Aeson.Types.Internal.defaultOptions{Data.Aeson.Types.Internal.fieldLabelModifier = Utils.toJSONField}}
 data Result
-    = Result {meta_ :: Meta_}
+    = Result {meta_ :: (Maybe Meta_)}
     deriving Arbitrary via (GenericArbitrary Result)
     deriving Show
     deriving Eq

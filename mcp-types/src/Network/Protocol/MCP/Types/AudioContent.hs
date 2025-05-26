@@ -23,7 +23,7 @@ import qualified Utils
 import           Network.Protocol.MCP.Types.Annotations (Annotations)
 
 data AudioContent
-    = AudioContent {annotations :: Annotations,
+    = AudioContent {annotations :: (Maybe Annotations),
                     data_       :: Text,
                     mimeType    :: Text,
                     type_       :: Text}

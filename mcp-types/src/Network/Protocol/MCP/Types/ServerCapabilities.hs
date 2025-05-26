@@ -55,7 +55,7 @@ instance ToJSON Logging
 instance FromJSON Logging
     where {parseJSON = Data.Aeson.Types.FromJSON.genericParseJSON Data.Aeson.Types.Internal.defaultOptions{Data.Aeson.Types.Internal.fieldLabelModifier = Utils.toJSONField}}
 data Prompts
-    = Prompts {listChanged :: Bool}
+    = Prompts {listChanged :: (Maybe Bool)}
     deriving Arbitrary via (GenericArbitrary Prompts)
     deriving Show
     deriving Eq
@@ -66,7 +66,8 @@ instance ToJSON Prompts
 instance FromJSON Prompts
     where {parseJSON = Data.Aeson.Types.FromJSON.genericParseJSON Data.Aeson.Types.Internal.defaultOptions{Data.Aeson.Types.Internal.fieldLabelModifier = Utils.toJSONField}}
 data Resources
-    = Resources {listChanged :: Bool, subscribe :: Bool}
+    = Resources {listChanged :: (Maybe Bool),
+                 subscribe   :: (Maybe Bool)}
     deriving Arbitrary via (GenericArbitrary Resources)
     deriving Show
     deriving Eq
@@ -77,7 +78,7 @@ instance ToJSON Resources
 instance FromJSON Resources
     where {parseJSON = Data.Aeson.Types.FromJSON.genericParseJSON Data.Aeson.Types.Internal.defaultOptions{Data.Aeson.Types.Internal.fieldLabelModifier = Utils.toJSONField}}
 data Tools
-    = Tools {listChanged :: Bool}
+    = Tools {listChanged :: (Maybe Bool)}
     deriving Arbitrary via (GenericArbitrary Tools)
     deriving Show
     deriving Eq
@@ -88,12 +89,12 @@ instance ToJSON Tools
 instance FromJSON Tools
     where {parseJSON = Data.Aeson.Types.FromJSON.genericParseJSON Data.Aeson.Types.Internal.defaultOptions{Data.Aeson.Types.Internal.fieldLabelModifier = Utils.toJSONField}}
 data ServerCapabilities
-    = ServerCapabilities {completions  :: Completions,
-                          experimental :: Experimental,
-                          logging      :: Logging,
-                          prompts      :: Prompts,
-                          resources    :: Resources,
-                          tools        :: Tools}
+    = ServerCapabilities {completions  :: (Maybe Completions),
+                          experimental :: (Maybe Experimental),
+                          logging      :: (Maybe Logging),
+                          prompts      :: (Maybe Prompts),
+                          resources    :: (Maybe Resources),
+                          tools        :: (Maybe Tools)}
     deriving Arbitrary via (GenericArbitrary ServerCapabilities)
     deriving Show
     deriving Eq

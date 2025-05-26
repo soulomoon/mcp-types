@@ -22,7 +22,7 @@ import qualified Utils
 
 
 data ModelHint
-    = ModelHint {name :: Text}
+    = ModelHint {name :: (Maybe Text)}
     deriving Arbitrary via (GenericArbitrary ModelHint)
     deriving Show
     deriving Eq

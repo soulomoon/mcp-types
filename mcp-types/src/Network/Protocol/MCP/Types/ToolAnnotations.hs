@@ -22,11 +22,11 @@ import qualified Utils
 
 
 data ToolAnnotations
-    = ToolAnnotations {destructiveHint :: Bool,
-                       idempotentHint  :: Bool,
-                       openWorldHint   :: Bool,
-                       readOnlyHint    :: Bool,
-                       title           :: Text}
+    = ToolAnnotations {destructiveHint :: (Maybe Bool),
+                       idempotentHint  :: (Maybe Bool),
+                       openWorldHint   :: (Maybe Bool),
+                       readOnlyHint    :: (Maybe Bool),
+                       title           :: (Maybe Text)}
     deriving Arbitrary via (GenericArbitrary ToolAnnotations)
     deriving Show
     deriving Eq

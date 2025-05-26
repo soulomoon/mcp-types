@@ -23,7 +23,7 @@ import qualified Utils
 import           Network.Protocol.MCP.Types.RequestId (RequestId)
 
 data Params
-    = Params {reason :: Text, requestId :: RequestId}
+    = Params {reason :: (Maybe Text), requestId :: RequestId}
     deriving Arbitrary via (GenericArbitrary Params)
     deriving Show
     deriving Eq

@@ -22,7 +22,7 @@ import qualified Utils
 
 
 data Root
-    = Root {name :: Text, uri :: Text}
+    = Root {name :: (Maybe Text), uri :: Text}
     deriving Arbitrary via (GenericArbitrary Root)
     deriving Show
     deriving Eq

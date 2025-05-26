@@ -37,11 +37,11 @@ instance ToJSON Meta_
 instance FromJSON Meta_
     where {parseJSON = Data.Aeson.Types.FromJSON.genericParseJSON Data.Aeson.Types.Internal.defaultOptions{Data.Aeson.Types.Internal.fieldLabelModifier = Utils.toJSONField}}
 data CreateMessageResult
-    = CreateMessageResult {meta_ :: Meta_,
+    = CreateMessageResult {meta_ :: (Maybe Meta_),
                            content :: (Either TextContent (Either ImageContent AudioContent)),
                            model :: Text,
                            role :: Role,
-                           stopReason :: Text}
+                           stopReason :: (Maybe Text)}
     deriving Arbitrary via (GenericArbitrary CreateMessageResult)
     deriving Show
     deriving Eq

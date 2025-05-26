@@ -33,7 +33,7 @@ instance ToJSON Meta_
 instance FromJSON Meta_
     where {parseJSON = Data.Aeson.Types.FromJSON.genericParseJSON Data.Aeson.Types.Internal.defaultOptions{Data.Aeson.Types.Internal.fieldLabelModifier = Utils.toJSONField}}
 data Params
-    = Params {meta_ :: Meta_}
+    = Params {meta_ :: (Maybe Meta_)}
     deriving Arbitrary via (GenericArbitrary Params)
     deriving Show
     deriving Eq
@@ -45,7 +45,7 @@ instance FromJSON Params
     where {parseJSON = Data.Aeson.Types.FromJSON.genericParseJSON Data.Aeson.Types.Internal.defaultOptions{Data.Aeson.Types.Internal.fieldLabelModifier = Utils.toJSONField}}
 data ResourceListChangedNotification
     = ResourceListChangedNotification {method :: Text,
-                                       params :: Params}
+                                       params :: (Maybe Params)}
     deriving Arbitrary via (GenericArbitrary ResourceListChangedNotification)
     deriving Show
     deriving Eq

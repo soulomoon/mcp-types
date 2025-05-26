@@ -24,8 +24,8 @@ import qualified Utils
 import           Network.Protocol.MCP.Types.PromptArgument (PromptArgument)
 
 data Prompt
-    = Prompt {arguments   :: [PromptArgument],
-              description :: Text,
+    = Prompt {arguments   :: (Maybe [PromptArgument]),
+              description :: (Maybe Text),
               name        :: Text}
     deriving Arbitrary via (GenericArbitrary Prompt)
     deriving Show

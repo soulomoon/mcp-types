@@ -38,11 +38,11 @@ instance ToJSON Meta_
 instance FromJSON Meta_
     where {parseJSON = Data.Aeson.Types.FromJSON.genericParseJSON Data.Aeson.Types.Internal.defaultOptions{Data.Aeson.Types.Internal.fieldLabelModifier = Utils.toJSONField}}
 data CallToolResult
-    = CallToolResult {meta_ :: Meta_,
+    = CallToolResult {meta_ :: (Maybe Meta_),
                       content :: [Either TextContent
                                          (Either ImageContent
                                                  (Either AudioContent EmbeddedResource))],
-                      isError :: Bool}
+                      isError :: (Maybe Bool)}
     deriving Arbitrary via (GenericArbitrary CallToolResult)
     deriving Show
     deriving Eq

@@ -23,7 +23,7 @@ import qualified Utils
 
 data BlobResourceContents
     = BlobResourceContents {blob     :: Text,
-                            mimeType :: Text,
+                            mimeType :: (Maybe Text),
                             uri      :: Text}
     deriving Arbitrary via (GenericArbitrary BlobResourceContents)
     deriving Show

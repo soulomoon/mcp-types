@@ -34,8 +34,8 @@ instance ToJSON Meta_
 instance FromJSON Meta_
     where {parseJSON = Data.Aeson.Types.FromJSON.genericParseJSON Data.Aeson.Types.Internal.defaultOptions{Data.Aeson.Types.Internal.fieldLabelModifier = Utils.toJSONField}}
 data ListPromptsResult
-    = ListPromptsResult {meta_      :: Meta_,
-                         nextCursor :: Text,
+    = ListPromptsResult {meta_      :: (Maybe Meta_),
+                         nextCursor :: (Maybe Text),
                          prompts    :: [Prompt]}
     deriving Arbitrary via (GenericArbitrary ListPromptsResult)
     deriving Show
