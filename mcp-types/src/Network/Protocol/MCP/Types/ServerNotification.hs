@@ -22,6 +22,7 @@ import           Prelude
 import           Test.QuickCheck                                            (Arbitrary)
 import           Test.QuickCheck.Arbitrary.Generic                          (GenericArbitrary (..))
 import qualified Utils
+import           Utils                                                      (Sum)
 
 import           Network.Protocol.MCP.Types.CancelledNotification           (CancelledNotification)
 import           Network.Protocol.MCP.Types.LoggingMessageNotification      (LoggingMessageNotification)
@@ -31,10 +32,10 @@ import           Network.Protocol.MCP.Types.ResourceListChangedNotification (Res
 import           Network.Protocol.MCP.Types.ResourceUpdatedNotification     (ResourceUpdatedNotification)
 import           Network.Protocol.MCP.Types.ToolListChangedNotification     (ToolListChangedNotification)
 
-type ServerNotification = Either CancelledNotification
-                                 (Either ProgressNotification
-                                         (Either ResourceListChangedNotification
-                                                 (Either ResourceUpdatedNotification
-                                                         (Either PromptListChangedNotification
-                                                                 (Either ToolListChangedNotification
-                                                                         LoggingMessageNotification)))))
+type ServerNotification = Sum CancelledNotification
+                              (Sum ProgressNotification
+                                   (Sum ResourceListChangedNotification
+                                        (Sum ResourceUpdatedNotification
+                                             (Sum PromptListChangedNotification
+                                                  (Sum ToolListChangedNotification
+                                                       LoggingMessageNotification)))))

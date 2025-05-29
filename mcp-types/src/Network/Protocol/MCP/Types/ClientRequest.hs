@@ -21,6 +21,7 @@ import           Prelude
 import           Test.QuickCheck                                 (Arbitrary)
 import           Test.QuickCheck.Arbitrary.Generic               (GenericArbitrary (..))
 import qualified Utils
+import           Utils                                           (Sum)
 
 import           Network.Protocol.MCP.Types.CallToolRequest      (CallToolRequest)
 import           Network.Protocol.MCP.Types.CompleteRequest      (CompleteRequest)
@@ -35,15 +36,15 @@ import           Network.Protocol.MCP.Types.SetLevelRequest      (SetLevelReques
 import           Network.Protocol.MCP.Types.SubscribeRequest     (SubscribeRequest)
 import           Network.Protocol.MCP.Types.UnsubscribeRequest   (UnsubscribeRequest)
 
-type ClientRequest = Either InitializeRequest
-                            (Either PingRequest
-                                    (Either ListResourcesRequest
-                                            (Either ReadResourceRequest
-                                                    (Either SubscribeRequest
-                                                            (Either UnsubscribeRequest
-                                                                    (Either ListPromptsRequest
-                                                                            (Either GetPromptRequest
-                                                                                    (Either ListToolsRequest
-                                                                                            (Either CallToolRequest
-                                                                                                    (Either SetLevelRequest
-                                                                                                            CompleteRequest))))))))))
+type ClientRequest = Sum InitializeRequest
+                         (Sum PingRequest
+                              (Sum ListResourcesRequest
+                                   (Sum ReadResourceRequest
+                                        (Sum SubscribeRequest
+                                             (Sum UnsubscribeRequest
+                                                  (Sum ListPromptsRequest
+                                                       (Sum GetPromptRequest
+                                                            (Sum ListToolsRequest
+                                                                 (Sum CallToolRequest
+                                                                      (Sum SetLevelRequest
+                                                                           CompleteRequest))))))))))

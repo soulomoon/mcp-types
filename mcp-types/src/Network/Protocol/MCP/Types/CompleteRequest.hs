@@ -21,6 +21,7 @@ import           Prelude
 import           Test.QuickCheck                              (Arbitrary)
 import           Test.QuickCheck.Arbitrary.Generic            (GenericArbitrary (..))
 import qualified Utils
+import           Utils                                        (Sum)
 
 import           Network.Protocol.MCP.Types.PromptReference   (PromptReference)
 import           Network.Protocol.MCP.Types.ResourceReference (ResourceReference)
@@ -38,7 +39,7 @@ instance FromJSON Argument
     where {parseJSON = Data.Aeson.Types.FromJSON.genericParseJSON Data.Aeson.Types.Internal.defaultOptions{Data.Aeson.Types.Internal.fieldLabelModifier = Utils.toJSONField}}
 data Params
     = Params {argument :: Argument,
-              ref      :: (Either PromptReference ResourceReference)}
+              ref      :: (Sum PromptReference ResourceReference)}
     deriving Arbitrary via (GenericArbitrary Params)
     deriving Show
     deriving Eq

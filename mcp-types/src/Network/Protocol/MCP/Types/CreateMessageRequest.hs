@@ -20,6 +20,7 @@ import           Prelude
 import           Test.QuickCheck                             (Arbitrary)
 import           Test.QuickCheck.Arbitrary.Generic           (GenericArbitrary (..))
 import qualified Utils
+import           Utils                                       (Sum)
 
 import           Network.Protocol.MCP.Types.ModelPreferences (ModelPreferences)
 import           Network.Protocol.MCP.Types.SamplingMessage  (SamplingMessage)

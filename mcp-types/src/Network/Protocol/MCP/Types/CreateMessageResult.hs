@@ -19,6 +19,7 @@ import           Prelude
 import           Test.QuickCheck                         (Arbitrary)
 import           Test.QuickCheck.Arbitrary.Generic       (GenericArbitrary (..))
 import qualified Utils
+import           Utils                                   (Sum)
 
 import           Network.Protocol.MCP.Types.AudioContent (AudioContent)
 import           Network.Protocol.MCP.Types.ImageContent (ImageContent)
@@ -38,7 +39,7 @@ instance FromJSON Meta_
     where {parseJSON = Data.Aeson.Types.FromJSON.genericParseJSON Data.Aeson.Types.Internal.defaultOptions{Data.Aeson.Types.Internal.fieldLabelModifier = Utils.toJSONField}}
 data CreateMessageResult
     = CreateMessageResult {meta_ :: (Maybe Meta_),
-                           content :: (Either TextContent (Either ImageContent AudioContent)),
+                           content :: (Sum TextContent (Sum ImageContent AudioContent)),
                            model :: Text,
                            role :: Role,
                            stopReason :: (Maybe Text)}

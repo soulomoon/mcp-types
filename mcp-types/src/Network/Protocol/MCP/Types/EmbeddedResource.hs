@@ -21,6 +21,7 @@ import           Prelude
 import           Test.QuickCheck                                 (Arbitrary)
 import           Test.QuickCheck.Arbitrary.Generic               (GenericArbitrary (..))
 import qualified Utils
+import           Utils                                           (Sum)
 
 import           Network.Protocol.MCP.Types.Annotations          (Annotations)
 import           Network.Protocol.MCP.Types.BlobResourceContents (BlobResourceContents)
@@ -28,7 +29,7 @@ import           Network.Protocol.MCP.Types.TextResourceContents (TextResourceCo
 
 data EmbeddedResource
     = EmbeddedResource {annotations :: (Maybe Annotations),
-                        resource :: (Either TextResourceContents BlobResourceContents),
+                        resource :: (Sum TextResourceContents BlobResourceContents),
                         type_ :: Text}
     deriving Arbitrary via (GenericArbitrary EmbeddedResource)
     deriving Show

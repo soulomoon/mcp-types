@@ -62,6 +62,7 @@ genOne (name, s) = do
             import qualified Data.Aeson as Data.Aeson.Types.ToJSON
             import Test.QuickCheck (Arbitrary)
             import Test.QuickCheck.Arbitrary.Generic (GenericArbitrary(..))
+            import Utils (Sum)
             import qualified Utils
             """,
             "",

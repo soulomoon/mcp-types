@@ -21,6 +21,7 @@ import           Prelude
 import           Test.QuickCheck                                 (Arbitrary)
 import           Test.QuickCheck.Arbitrary.Generic               (GenericArbitrary (..))
 import qualified Utils
+import           Utils                                           (Sum)
 
 import           Network.Protocol.MCP.Types.BlobResourceContents (BlobResourceContents)
 import           Network.Protocol.MCP.Types.TextResourceContents (TextResourceContents)
@@ -38,7 +39,7 @@ instance FromJSON Meta_
     where {parseJSON = Data.Aeson.Types.FromJSON.genericParseJSON Data.Aeson.Types.Internal.defaultOptions{Data.Aeson.Types.Internal.fieldLabelModifier = Utils.toJSONField}}
 data ReadResourceResult
     = ReadResourceResult {meta_ :: (Maybe Meta_),
-                          contents :: [Either TextResourceContents BlobResourceContents]}
+                          contents :: [Sum TextResourceContents BlobResourceContents]}
     deriving Arbitrary via (GenericArbitrary ReadResourceResult)
     deriving Show
     deriving Eq

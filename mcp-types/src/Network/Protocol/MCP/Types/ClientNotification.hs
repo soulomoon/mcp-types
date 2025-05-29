@@ -22,12 +22,13 @@ import           Prelude
 import           Test.QuickCheck                                         (Arbitrary)
 import           Test.QuickCheck.Arbitrary.Generic                       (GenericArbitrary (..))
 import qualified Utils
+import           Utils                                                   (Sum)
 
 import           Network.Protocol.MCP.Types.CancelledNotification        (CancelledNotification)
 import           Network.Protocol.MCP.Types.InitializedNotification      (InitializedNotification)
 import           Network.Protocol.MCP.Types.ProgressNotification         (ProgressNotification)
 import           Network.Protocol.MCP.Types.RootsListChangedNotification (RootsListChangedNotification)
 
-type ClientNotification = Either CancelledNotification
-                                 (Either InitializedNotification
-                                         (Either ProgressNotification RootsListChangedNotification))
+type ClientNotification = Sum CancelledNotification
+                              (Sum InitializedNotification
+                                   (Sum ProgressNotification RootsListChangedNotification))

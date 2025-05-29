@@ -20,6 +20,7 @@ import           Prelude
 import           Test.QuickCheck                             (Arbitrary)
 import           Test.QuickCheck.Arbitrary.Generic           (GenericArbitrary (..))
 import qualified Utils
+import           Utils                                       (Sum)
 
 import           Network.Protocol.MCP.Types.AudioContent     (AudioContent)
 import           Network.Protocol.MCP.Types.EmbeddedResource (EmbeddedResource)
@@ -28,9 +29,8 @@ import           Network.Protocol.MCP.Types.Role             (Role)
 import           Network.Protocol.MCP.Types.TextContent      (TextContent)
 
 data PromptMessage
-    = PromptMessage {content :: (Either TextContent
-                                        (Either ImageContent
-                                                (Either AudioContent EmbeddedResource))),
+    = PromptMessage {content :: (Sum TextContent
+                                     (Sum ImageContent (Sum AudioContent EmbeddedResource))),
                      role :: Role}
     deriving Arbitrary via (GenericArbitrary PromptMessage)
     deriving Show

@@ -21,16 +21,15 @@ import           Prelude
 import           Test.QuickCheck                                (Arbitrary)
 import           Test.QuickCheck.Arbitrary.Generic              (GenericArbitrary (..))
 import qualified Utils
+import           Utils                                          (Sum)
 
 import           Network.Protocol.MCP.Types.JSONRPCError        (JSONRPCError)
 import           Network.Protocol.MCP.Types.JSONRPCNotification (JSONRPCNotification)
 import           Network.Protocol.MCP.Types.JSONRPCRequest      (JSONRPCRequest)
 import           Network.Protocol.MCP.Types.JSONRPCResponse     (JSONRPCResponse)
 
-type JSONRPCMessage = Either JSONRPCRequest
-                             (Either JSONRPCNotification
-                                     (Either [Either JSONRPCRequest JSONRPCNotification]
-                                             (Either JSONRPCResponse
-                                                     (Either JSONRPCError
-                                                             [Either JSONRPCResponse
-                                                                     JSONRPCError]))))
+type JSONRPCMessage = Sum JSONRPCRequest
+                          (Sum JSONRPCNotification
+                               (Sum [Sum JSONRPCRequest JSONRPCNotification]
+                                    (Sum JSONRPCResponse
+                                         (Sum JSONRPCError [Sum JSONRPCResponse JSONRPCError]))))

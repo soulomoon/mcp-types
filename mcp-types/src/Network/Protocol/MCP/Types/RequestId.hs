@@ -19,6 +19,7 @@ import           Prelude
 import           Test.QuickCheck                   (Arbitrary)
 import           Test.QuickCheck.Arbitrary.Generic (GenericArbitrary (..))
 import qualified Utils
+import           Utils                             (Sum)
 
 
 data RequestId

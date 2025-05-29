@@ -19,6 +19,7 @@ import           Prelude
 import           Test.QuickCheck                         (Arbitrary)
 import           Test.QuickCheck.Arbitrary.Generic       (GenericArbitrary (..))
 import qualified Utils
+import           Utils                                   (Sum)
 
 import           Network.Protocol.MCP.Types.AudioContent (AudioContent)
 import           Network.Protocol.MCP.Types.ImageContent (ImageContent)
@@ -26,8 +27,8 @@ import           Network.Protocol.MCP.Types.Role         (Role)
 import           Network.Protocol.MCP.Types.TextContent  (TextContent)
 
 data SamplingMessage
-    = SamplingMessage {content :: (Either TextContent
-                                          (Either ImageContent AudioContent)),
+    = SamplingMessage {content :: (Sum TextContent
+                                       (Sum ImageContent AudioContent)),
                        role :: Role}
     deriving Arbitrary via (GenericArbitrary SamplingMessage)
     deriving Show

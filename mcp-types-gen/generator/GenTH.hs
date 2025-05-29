@@ -144,8 +144,8 @@ hsTypeTH entity = case entity of
   STypeAlternativeTypeAlternative _ -> conT' ''Value -- Could be refined if needed
   SOneOf entities ->
     case entities of
-      [a, b] -> AppT (AppT (ConT (mkName "Either")) (hsTypeTH a)) (hsTypeTH  b)
-      (x : xs) -> foldr1 (AppT . AppT (ConT (mkName "Either"))) (map hsTypeTH (x : xs))
+      [a, b] -> AppT (AppT (ConT (mkName "Sum")) (hsTypeTH a)) (hsTypeTH  b)
+      (x : xs) -> foldr1 (AppT . AppT (ConT (mkName "Sum"))) (map hsTypeTH (x : xs))
       [] -> conT' ''Value
   SJSONType _ -> conT' ''Value
   SObjectType _ -> error $ "Object type only at top level after expandObj: " ++ show entity

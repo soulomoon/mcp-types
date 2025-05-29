@@ -20,8 +20,9 @@ import           Prelude
 import           Test.QuickCheck                            (Arbitrary)
 import           Test.QuickCheck.Arbitrary.Generic          (GenericArbitrary (..))
 import qualified Utils
+import           Utils                                      (Sum)
 
 import           Network.Protocol.MCP.Types.JSONRPCError    (JSONRPCError)
 import           Network.Protocol.MCP.Types.JSONRPCResponse (JSONRPCResponse)
 
-type JSONRPCBatchResponse = [Either JSONRPCResponse JSONRPCError]
+type JSONRPCBatchResponse = [Sum JSONRPCResponse JSONRPCError]

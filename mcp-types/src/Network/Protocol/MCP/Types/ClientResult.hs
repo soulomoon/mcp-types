@@ -21,10 +21,11 @@ import           Prelude
 import           Test.QuickCheck                                (Arbitrary)
 import           Test.QuickCheck.Arbitrary.Generic              (GenericArbitrary (..))
 import qualified Utils
+import           Utils                                          (Sum)
 
 import           Network.Protocol.MCP.Types.CreateMessageResult (CreateMessageResult)
 import           Network.Protocol.MCP.Types.ListRootsResult     (ListRootsResult)
 import           Network.Protocol.MCP.Types.Result              (Result)
 
-type ClientResult = Either Result
-                           (Either CreateMessageResult ListRootsResult)
+type ClientResult = Sum Result
+                        (Sum CreateMessageResult ListRootsResult)
